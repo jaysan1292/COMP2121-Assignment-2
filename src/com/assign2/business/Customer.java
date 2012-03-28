@@ -47,6 +47,26 @@ public class Customer {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+<<<<<<< HEAD
+
+    /**
+     * @return the customerId
+     */
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * @param customerId the customerId to set
+     */
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+     
+    
+}
+=======
+>>>>>>> upstream/master
 
     public void setCustomerId( int customerId ) {
         this.customerId = customerId;
