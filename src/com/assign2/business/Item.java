@@ -10,6 +10,7 @@ package com.assign2.business;
  */
 public class Item {
     private int itemId;
+    private String name;
     private String category;
     private double price;
     private String description;

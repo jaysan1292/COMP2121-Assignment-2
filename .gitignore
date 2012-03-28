@@ -1,0 +1,9 @@
+build/*
+nbproject/*
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear

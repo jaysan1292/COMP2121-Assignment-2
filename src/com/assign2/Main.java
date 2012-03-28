@@ -12,7 +12,9 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main( String[] args ) {
+        Utils.log_info("Connecting to database.");
+        java.sql.Connection conn = com.assign2.data.CommonAccess.dbConnect();
+        Utils.log_debug( conn.toString() );
     }
 }
