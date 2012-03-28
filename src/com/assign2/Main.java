@@ -4,6 +4,10 @@
  */
 package com.assign2;
 
+import com.assign2.business.Customer;
+import com.assign2.data.CustomerAccess;
+import java.sql.SQLException;
+
 /**
  *
  * @author Jason Recillo
@@ -13,8 +17,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main( String[] args ) {
-        Utils.log_info("Connecting to database.");
-        java.sql.Connection conn = com.assign2.data.CommonAccess.dbConnect();
-        Utils.log_debug( conn.toString() );
+        try {
+            CustomerAccess.addNewCustomer( "asdf", "ghjk", "fdxgfhghd", "123456890");
+            CustomerAccess.deleteCustomer( "4");
+            CustomerAccess.updateCustomer( CustomerAccess.FIRST_NAME, "5", "JD");
+        } catch ( SQLException ex ) {
+            ex.printStackTrace();
+        }
     }
 }
