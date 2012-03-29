@@ -12,5 +12,47 @@ public class Category {
     private int categoryId;
     private String categoryName;
     private int parentCategoryId;
+
+    /**
+     * @return the categoryId
+     */
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * @param categoryId the categoryId to set
+     */
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
+     * @return the categoryName
+     */
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    /**
+     * @param categoryName the categoryName to set
+     */
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    /**
+     * @return the parentCategoryId
+     */
+    public int getParentCategoryId() {
+        return parentCategoryId;
+    }
+
+    /**
+     * @param parentCategoryId the parentCategoryId to set
+     */
+    public void setParentCategoryId(int parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
+    }
     
 }
