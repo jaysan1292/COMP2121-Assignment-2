@@ -4,11 +4,19 @@
  */
 package com.assign2;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author Jason Recillo
  */
 public class Utils {
+    public static String formatDate( Date date ) {
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd" );
+        return format.format( date );
+    }
+
     //TODO: [{name}] ({filename}:{line number}): {message}
     public static void log_debug( String s ) {
         System.out.println( String.format( "[DEBUG]: %s", s ) );
