@@ -14,9 +14,14 @@ public class OrderLine {
     private int quantity;
     private double total;
 
-    /**
-     * @return the orderId
-     */
+    public OrderLine(int oId, int iID, int qty, double _total)
+    { Order orderObj= new Order();
+      Item itemObj = new Item();
+      orderId = orderObj.getOrderId();
+      itemId =itemObj.getItemId();
+       quantity = qty;
+       total = _total;
+    }
     public int getOrderId() {
         return orderId;
     }

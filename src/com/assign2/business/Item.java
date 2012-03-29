@@ -16,6 +16,7 @@ public class Item {
     private String description;
     private String Image;
     private int qtyInStock;
+    
 
     /**
      * @return the itemId
