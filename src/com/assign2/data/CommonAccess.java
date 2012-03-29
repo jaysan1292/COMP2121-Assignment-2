@@ -13,8 +13,8 @@ import java.sql.SQLException;
  *
  * @author Jason Recillo
  */
-public class CommonAccess {
-    private CommonAccess() {
+public abstract class CommonAccess {
+    public CommonAccess() {
     }
 
     public static Connection dbConnect() {

@@ -6,7 +6,6 @@ package com.assign2.data;
 
 import com.assign2.Utils;
 import com.assign2.business.Customer;
-import com.mysql.jdbc.NotImplemented;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +16,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  *
  * @author Jason Recillo
  */
-public class CustomerAccess {
+public class CustomerAccess extends CommonAccess{
     public static final String CUSTOMER_ID = "customer_id";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
@@ -25,6 +24,7 @@ public class CustomerAccess {
     public static final String PHONE_NUMBER = "phone_number";
 
     private CustomerAccess() {
+        super();
     }
 
     /**
@@ -37,7 +37,7 @@ public class CustomerAccess {
      */
     public static Customer findCustomer( String column, String value ) throws SQLException {
         Utils.log_info( "Connecting to database..." );
-        Connection conn = CommonAccess.dbConnect();
+        Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format( "SELECT * FROM customer WHERE %s='%s';", column, value );
@@ -62,7 +62,7 @@ public class CustomerAccess {
 
     public static void addNewCustomer( String firstName, String lastName, String address, String phoneNumber ) throws SQLException {
         Utils.log_info( "Connecting to database..." );
-        Connection conn = CommonAccess.dbConnect();
+        Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
         String query = "INSERT INTO customer ";
@@ -73,15 +73,20 @@ public class CustomerAccess {
         sqlStatement.executeUpdate( query );
     }
 
-    public static void deleteCustomer( String customerId ) throws SQLException {
+    public static boolean deleteCustomer( int customerId ) throws SQLException {
         Utils.log_info( "Connecting to database..." );
-        Connection conn = CommonAccess.dbConnect();
+        Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format( "DELETE FROM customer WHERE customer_id='%s';", customerId );
         Utils.log_info( "Executing SQL query: %s", query );
 
-        //sqlStatement.executeUpdate( query );
+        try {
+            sqlStatement.executeUpdate( query );
+        } catch ( SQLException ex ) {
+            return false;
+        }
+        return true;
     }
     
     public static void updateCustomer(String column, String customerId, String newValue) throws SQLException{
