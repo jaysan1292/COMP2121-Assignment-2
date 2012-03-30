@@ -71,4 +71,56 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="reports.dir" value="${basedir}/dist"/>
+    <target name="javadocs" description="Builds Javadoc and UML diagrams.">
+        <mkdir dir="${reports.dir}/javadoc"/>
+        <javadoc sourcepath="${src.dir}" packagenames="com.assign2.*" destdir="${reports.dir}/javadoc"
+	        	private="true">
+            <doclet name="org.umlgraph.doclet.UmlGraphDoc"
+	        		  path="${basedir}/lib/UMLGraph.jar">
+                <param name="-attributes" />
+                <param name="-collapsible" />
+                <param name="-compact" />
+                <param name="-constructors" />
+                <param name="-edgefontname" value="Courier New" />
+                <param name="-edgefontsize" value="12" />
+                <param name="-hide" value="java.*" />
+                <param name="-inferdep" />
+                <param name="-nodefontabstractname" value="Courier New" />
+                <param name="-nodefontclassabstractname" value="Courier New" />
+                <param name="-nodefontclassname" value="Courier New" />
+                <param name="-nodefontclasssize" value="12" />
+                <param name="-nodefontname" value="Courier New" />
+                <param name="-nodefontpackagesize" value="12" />
+                <param name="-nodefontsize" value="12" />
+                <param name="-nodefonttagname" value="Courier New" />
+                <param name="-nodefonttagsize" value="12" />
+                <param name="-operations" />
+                <param name="-qualify" />
+                <param name="-types" />
+                <param name="-visibility" />
+            </doclet>
+        </javadoc>
+        <apply executable="dot" dest="${reports.dir}" parallel="false">
+            <arg value="-Tpng"/>
+            <arg value="-o"/>
+            <targetfile/>
+            <srcfile/>
+            <fileset dir="${reports.dir}" includes="*.dot"/>
+            <mapper type="glob" from="*.dot" to="*.png"/>
+        </apply>
+    </target>
+    <target name="jdepend">
+
+        <jdepend outputfile="docs/jdepend-report.txt">
+            <exclude name="java.*"/>
+            <exclude name="javax.*"/>
+            <classespath>
+                <pathelement location="build" />
+            </classespath>
+            <classpath location="build" />
+        </jdepend>
+
+    </target>
 </project>

@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./OrderLineAccess.html" title="com.assign2.data.OrderLineAccess" alt="" coords="16,647,829,859"/>
+<area shape="rect" id="node1" href="./OrderLineAccess.html" title="&lt;TABLE&gt;" alt="" coords="5,642,840,865"/>
+<area shape="rect" id="node2_1" href="./OrderAccess.html" title="com.assign2.data.OrderAccess" alt="" coords="875,657,1549,850"/>
+<area shape="rect" id="node2" href="./OrderAccess.html" title="&lt;TABLE&gt;" alt="" coords="865,651,1559,855"/>
+<area shape="rect" id="node3_2" href="./ItemAccess.html" title="com.assign2.data.ItemAccess" alt="" coords="1595,629,2957,878"/>
+<area shape="rect" id="node3" href="./ItemAccess.html" title="&lt;TABLE&gt;" alt="" coords="1584,623,2968,883"/>
+<area shape="rect" id="node4_3" href="./CustomerAccess.html" title="com.assign2.data.CustomerAccess" alt="" coords="3003,638,3986,869"/>
+<area shape="rect" id="node4" href="./CustomerAccess.html" title="&lt;TABLE&gt;" alt="" coords="2993,633,3997,874"/>
+<area shape="rect" id="node5_4" href="./CommonAccess.html" title="com.assign2.data.CommonAccess" alt="" coords="2739,11,3032,130"/>
+<area shape="rect" id="node5" href="./CommonAccess.html" title="&lt;TABLE&gt;" alt="" coords="2728,6,3043,135"/>
+<area shape="rect" id="node6_5" href="./CategoryAccess.html" title="com.assign2.data.CategoryAccess" alt="" coords="4031,657,4905,850"/>
+<area shape="rect" id="node6" href="./CategoryAccess.html" title="&lt;TABLE&gt;" alt="" coords="4021,651,4915,855"/>
+<area shape="rect" id="node13_6" href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Connection.html" title="java.sql.Connection" alt="" coords="4950,190,6063,1317"/>
+<area shape="rect" id="node13" href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Connection.html" title="&lt;TABLE&gt;" alt="" coords="4939,185,6074,1322"/>
+</map>

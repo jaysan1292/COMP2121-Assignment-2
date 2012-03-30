@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./OrderLine.html" title="com.assign2.business.OrderLine" alt="" coords="16,95,659,382"/>
+<area shape="rect" id="node1" href="./OrderLine.html" title="&lt;TABLE&gt;" alt="" coords="5,90,669,387"/>
+<area shape="rect" id="node2_1" href="./OrderHandler.html" title="com.assign2.business.OrderHandler" alt="" coords="704,170,1157,307"/>
+<area shape="rect" id="node2" href="./OrderHandler.html" title="&lt;TABLE&gt;" alt="" coords="693,165,1168,313"/>
+<area shape="rect" id="node3_2" href="./Order.html" title="com.assign2.business.Order" alt="" coords="1203,123,1565,354"/>
+<area shape="rect" id="node3" href="./Order.html" title="&lt;TABLE&gt;" alt="" coords="1192,118,1576,359"/>
+<area shape="rect" id="node4_3" href="./Item.html" title="com.assign2.business.Item" alt="" coords="1611,11,2024,466"/>
+<area shape="rect" id="node4" href="./Item.html" title="&lt;TABLE&gt;" alt="" coords="1600,6,2035,471"/>
+<area shape="rect" id="node5_4" href="./Customer.html" title="com.assign2.business.Customer" alt="" coords="2069,58,2992,419"/>
+<area shape="rect" id="node5" href="./Customer.html" title="&lt;TABLE&gt;" alt="" coords="2059,53,3003,425"/>
+<area shape="rect" id="node6_5" href="./Category.html" title="com.assign2.business.Category" alt="" coords="3037,123,3531,354"/>
+<area shape="rect" id="node6" href="./Category.html" title="&lt;TABLE&gt;" alt="" coords="3027,118,3541,359"/>
+</map>
