@@ -8,6 +8,6 @@ package com.assign2.data;
  *
  * @author Jason Recillo
  */
-public class OrderAccess extends CommonAccess{
-    public static final String ORDER_ID="order_id";
+public class OrderAccess extends CommonAccess {
+    public static final String ORDER_ID = "order_id";
 }

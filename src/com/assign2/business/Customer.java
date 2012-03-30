@@ -22,7 +22,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer( String firstName, String lastName, String address, String phoneNumber ) {
+    public Customer(String firstName, String lastName, String address, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -49,29 +49,29 @@ public class Customer {
         return phoneNumber;
     }
 
-    public void setCustomerId( int customerId ) {
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 
-    public void setFirstName( String firstName ) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public void setLastName( String lastName ) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public void setAddress( String address ) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setPhoneNumber( String phoneNumber ) throws IllegalArgumentException {
-        Pattern pattern = Pattern.compile( "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$" );
-        Matcher matcher = pattern.matcher( phoneNumber );
-        if ( matcher.matches() ) {
+    public void setPhoneNumber(String phoneNumber) throws IllegalArgumentException {
+        Pattern pattern = Pattern.compile("^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$");
+        Matcher matcher = pattern.matcher(phoneNumber);
+        if (matcher.matches()) {
             this.phoneNumber = phoneNumber;
         } else {
-            throw new IllegalArgumentException( "Phone number was not valid." );
+            throw new IllegalArgumentException("Phone number was not valid.");
         }
 
     }
