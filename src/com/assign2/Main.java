@@ -4,6 +4,9 @@
  */
 package com.assign2;
 
+import com.assign2.data.CustomerAccess;
+import com.assign2.business.Customer;
+
 /**
  *
  * @author Jason Recillo
@@ -14,5 +17,8 @@ public class Main {
      */
     public static void main( String[] args ) {
         //
+        
+        Customer a = new Customer();
+        a.findCustomerByLastName("first", "Jason");
     }
 }
