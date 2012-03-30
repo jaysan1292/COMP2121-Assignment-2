@@ -15,20 +15,24 @@ public class OrderAccess extends CommonAccess {
     public static final String ORDER_ID = "order_id";
     public static final String CUSTOMER_ID = "customer_id";
     public static final String ORDER_DATE = "order_date";
-    
-    public void addNewOrder(int orderId, int customerId, Date date){
+
+    private OrderAccess() {
+        super();
+    }
+
+    public void addNewOrder(int orderId, int customerId, Date date) {
         throw new NotImplementedException();
     }
-    
-    public void deleteOrder(int orderId){
+
+    public void deleteOrder(int orderId) {
         throw new NotImplementedException();
     }
-    
-    public void findOrder(String column, String value){
+
+    public void findOrder(String column, String value) {
         throw new NotImplementedException();
     }
-    
-    public void updateOrder(int orderId, String column, String newValue){
+
+    public void updateOrder(int orderId, String column, String newValue) {
         throw new NotImplementedException();
     }
 }

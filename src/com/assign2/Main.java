@@ -16,7 +16,7 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            CustomerAccess.updateCustomer(14, CustomerAccess.FIRST_NAME, "newname");
+            
         } catch (Exception ex) {
             Utils.log_error(ex.getMessage());
             ex.printStackTrace();

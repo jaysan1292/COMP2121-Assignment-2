@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+//TODO: Data validation for all data access classes
 package com.assign2.data;
 
 import com.assign2.Utils;
@@ -31,9 +28,11 @@ public abstract class CommonAccess {
             Utils.log_error(ex.getMessage());
         }
     }
-    
-    public static Connection dbConnect(){
-        if(connection == null) _dbConnect();
+
+    public static Connection dbConnect() {
+        if (connection == null) {
+            _dbConnect();
+        }
         return connection;
     }
 }

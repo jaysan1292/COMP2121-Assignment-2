@@ -26,6 +26,10 @@ public class ItemAccess extends CommonAccess {
     public static final String DESCRIPTION = "price";
     public static final String IMAGE = "image";
 
+    private ItemAccess() {
+        super();
+    }
+
     public static Item findItem(String column, String value) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -38,7 +42,7 @@ public class ItemAccess extends CommonAccess {
             throw new SQLException("Result set returned no data.");
         }
 
-        Item item =  new Item();
+        Item item = new Item();
         item.setItemId(resultSet.getInt(ITEM_ID));
         item.setName(resultSet.getString(NAME));
         item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, resultSet.getString(CATEGORY)));
@@ -48,16 +52,16 @@ public class ItemAccess extends CommonAccess {
 
         return item;
     }
-    
-    public void addNewItem(int itemId, String name, Category category,double price,String description,Image image, int qtyInStock){
+
+    public void addNewItem(int itemId, String name, Category category, double price, String description, Image image, int qtyInStock) {
         throw new NotImplementedException();
     }
-    
-    public void deleteItem(int itemId){
+
+    public void deleteItem(int itemId) {
         throw new NotImplementedException();
     }
-    
-    public void updateItem(int itemId, String column, String value){
+
+    public void updateItem(int itemId, String column, String value) {
         throw new NotImplementedException();
     }
 }

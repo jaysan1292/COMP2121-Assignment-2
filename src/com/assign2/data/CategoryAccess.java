@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -18,20 +17,24 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Jason Recillo
  */
 public class CategoryAccess extends CommonAccess {
-    public static final String CATEGORY_ID="category_id";
-    public static final String CATEGORY_NAME="category_name";
-    public static final String PARENT_CATEGORY_ID="parent_category_id";
-    
-    public void addNewCategory(int categoryId, String categoryName, Category parentCategory){
+    public static final String CATEGORY_ID = "category_id";
+    public static final String CATEGORY_NAME = "category_name";
+    public static final String PARENT_CATEGORY_ID = "parent_category_id";
+
+    private CategoryAccess() {
+        super();
+    }
+
+    public void addNewCategory(int categoryId, String categoryName, Category parentCategory) {
         throw new NotImplementedException();
     }
-    
-    public void deleteCategory(int categoryId){
+
+    public void deleteCategory(int categoryId) {
         throw new NotImplementedException();
     }
 
     public static Category findCategory(String column, String value) throws SQLException {
-        
+
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -42,7 +45,7 @@ public class CategoryAccess extends CommonAccess {
         if (!(resultSet.first())) {
             throw new SQLException("Result set returned no data.");
         }
-        
+
         Category category = new Category();
         category.setCategoryId(resultSet.getInt(CATEGORY_ID));
         category.setCategoryName(resultSet.getString(CATEGORY_NAME));
@@ -51,11 +54,11 @@ public class CategoryAccess extends CommonAccess {
         } catch (SQLException ex) {
             category.setParentCategory(null);
         }
-        
+
         return category;
     }
-    
-    public void updateCategory(int categoryId, String column, String newValue){
+
+    public void updateCategory(int categoryId, String column, String newValue) {
         throw new NotImplementedException();
     }
 }
