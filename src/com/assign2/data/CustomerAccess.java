@@ -18,7 +18,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  *
  * @author Jason Recillo
  */
-public class CustomerAccess {
+public class CustomerAccess extends CommonAccess {
     public static final String CUSTOMER_ID = "customer_id";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";

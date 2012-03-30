@@ -79,7 +79,7 @@ public class Customer {
 
     }
 
-    public Customer findCustomerByLastName(String _column, String _value) {
+    public Customer findCustomer(String _column, String _value) {
         Customer cust = new Customer();
         String column = "";
         switch (_column) {

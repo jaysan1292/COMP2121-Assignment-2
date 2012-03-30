@@ -19,6 +19,6 @@ public class Main {
         //
         
         Customer a = new Customer();
-        a.findCustomerByLastName("first", "Jason");
+        a.findCustomer("first", "Jason");
     }
 }

@@ -14,7 +14,9 @@ public class OrderHandler {
     private OrderHandler() {
     }
 
-    public void processNewOrder() {
+    public void processNewOrder(int CId, int itemId, int qty) {
+        Order orderObj = new Order();
+        
         
     }
 
