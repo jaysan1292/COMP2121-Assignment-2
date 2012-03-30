@@ -6,6 +6,8 @@ package com.assign2.business;
 
 import com.assign2.data.CustomerAccess;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.*;
 
 /**
@@ -13,6 +15,7 @@ import java.util.regex.*;
  * @author janjong
  */
 public class Customer {
+
     private int customerId;
     private String firstName;
     private String lastName;
@@ -73,6 +76,54 @@ public class Customer {
         } else {
             throw new IllegalArgumentException("Phone number was not valid.");
         }
+
+
+
+    }
+
+    public Customer findCustomerByLastName(String _column, String _value) {
+
+        Customer cust = new Customer();
+
+        String column = "";
+
+        switch (_column) {
+
+            case "first":
+
+                column = CustomerAccess.FIRST_NAME;
+
+                break;
+
+            case "last":
+
+                column = CustomerAccess.LAST_NAME;
+
+                break;
+
+            case "cNum":
+
+                column = CustomerAccess.CUSTOMER_ID;
+
+                break;
+            case "address":
+                column = CustomerAccess.ADDRESS;
+
+                break;
+
+        }
+        try {
+
+            cust = CustomerAccess.findCustomer(column, _value);
+
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return cust;
 
     }
 }
