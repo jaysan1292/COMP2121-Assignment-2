@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 build/*
 nbproject/*
 
@@ -8,3 +9,14 @@ nbproject/*
 *.war
 *.ear
 /dist/
+=======
+build*
+nbproject*
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+>>>>>>> upstream/master

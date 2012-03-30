@@ -22,10 +22,10 @@ public abstract class CommonAccess {
             String host = "jdbc:mysql://jaysan1292.com:3306/jrecillo_school";
             String user = "jrecillo";
             String pass = "parallelline";
-            Connection conn = DriverManager.getConnection( host, user, pass );
+            Connection conn = DriverManager.getConnection(host, user, pass);
             return conn;
-        } catch ( SQLException ex ) {
-            Utils.log_error( ex.getMessage() );
+        } catch (SQLException ex) {
+            Utils.log_error(ex.getMessage());
             return null;
         }
     }
