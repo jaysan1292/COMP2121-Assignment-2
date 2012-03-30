@@ -17,7 +17,8 @@ public class Main {
     public static void main(String[] args) {
 
       Customer a = new Customer();
-      a.CreateCustomer("Lebron", "James", "5543 NW ST, Miami", "6478796541");
+      a= a.findCustomer("last", "james");
+      a.removeCustomer(a);
 
     }
 }

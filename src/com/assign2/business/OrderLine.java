@@ -10,10 +10,14 @@ package com.assign2.business;
  * @author janjong
  */
 public class OrderLine {
+
     private int orderId;
     private int itemId;
     private int quantity;
     private double total;
+
+    public OrderLine() {
+    }
 
     public OrderLine(int oId, int iID, int qty, double _total) {
         Order orderObj = new Order();
@@ -77,4 +81,3 @@ public class OrderLine {
         this.total = total;
     }
 }
-

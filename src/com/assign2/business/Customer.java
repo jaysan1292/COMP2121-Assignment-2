@@ -92,9 +92,10 @@ public class Customer {
     
     
 
-    public Customer findCustomerByLastName(String _column, String _value) {
+    public Customer findCustomer(String _column, String _value) {
 
-        Customer cust = new Customer();
+     
+        CustomerHandler _handler = new CustomerHandler();
 
         String column = "";
 
@@ -123,18 +124,48 @@ public class Customer {
                 break;
 
         }
-        try {
+        
+       return (_handler.findCusomter(column,  _value));
 
-            cust = CustomerAccess.findCustomer(column, _value);
+        
 
+    }
+    
+    public void removeCustomer(Customer customer)
+    {   CustomerHandler _handler = new CustomerHandler();
+    _handler.removeCustomer(customer.getCustomerId());        
+    }
+    
+    public void updateCustomer(Customer customer, String _column, String newValue)
+    { CustomerHandler _handler = new CustomerHandler();
+        String column = "";
 
-        } catch (SQLException ex) {
+        switch (_column) {
 
-            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+            case "first":
+
+                column = CustomerAccess.FIRST_NAME;
+
+                break;
+
+            case "last":
+
+                column = CustomerAccess.LAST_NAME;
+
+                break;
+
+            case "cNum":
+
+                column = CustomerAccess.CUSTOMER_ID;
+
+                break;
+            case "address":
+                column = CustomerAccess.ADDRESS;
+
+                break;
 
         }
-
-        return cust;
-
+    _handler.UpdateExistingCustomer(customer, column, newValue);
+        
     }
 }
