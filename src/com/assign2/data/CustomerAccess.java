@@ -49,11 +49,11 @@ public class CustomerAccess extends CommonAccess {
         }
 
         Customer customer = new Customer();
-        customer.setCustomerId(resultSet.getInt("customer_id"));
-        customer.setFirstName(resultSet.getString("first_name"));
-        customer.setLastName(resultSet.getString("last_name"));
-        customer.setAddress(resultSet.getString("address"));
-        customer.setPhoneNumber(resultSet.getString("phone_number"));
+        customer.setCustomerId(resultSet.getInt(CUSTOMER_ID));
+        customer.setFirstName(resultSet.getString(FIRST_NAME));
+        customer.setLastName(resultSet.getString(LAST_NAME));
+        customer.setAddress(resultSet.getString(ADDRESS));
+        customer.setPhoneNumber(resultSet.getString(PHONE_NUMBER));
 
         Utils.log_info("Returned customer information:\n\t\tFirst name: %s\n\t\tLast name: %s", customer.getFirstName(), customer.getLastName());
 
