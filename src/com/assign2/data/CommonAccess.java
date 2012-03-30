@@ -14,19 +14,26 @@ import java.sql.SQLException;
  * @author Jason Recillo
  */
 public abstract class CommonAccess {
+    static Connection connection = null;
+
     public CommonAccess() {
     }
 
-    public static Connection dbConnect() {
+    private static void _dbConnect() {
         try {
+            Utils.log_info("Connecting to database...");
             String host = "jdbc:mysql://jaysan1292.com:3306/jrecillo_school";
             String user = "jrecillo";
             String pass = "parallelline";
             Connection conn = DriverManager.getConnection(host, user, pass);
-            return conn;
+            connection = conn;
         } catch (SQLException ex) {
             Utils.log_error(ex.getMessage());
-            return null;
         }
+    }
+    
+    public static Connection dbConnect(){
+        if(connection == null) _dbConnect();
+        return connection;
     }
 }

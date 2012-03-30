@@ -5,15 +5,32 @@
 package com.assign2;
 
 import com.assign2.data.CustomerAccess;
+<<<<<<< HEAD
  	 	
 import com.assign2.business.Customer;
+=======
+
+/**
+ *
+ * @author Jason Recillo
+ */
+>>>>>>> upstream/master
 public class Main {
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+<<<<<<< HEAD
        Customer a = new Customer();
  	 	
        a.findCustomerByLastName("first", "Jason");
+=======
+        try {
+            CustomerAccess.updateCustomer(14, CustomerAccess.FIRST_NAME, "newname");
+        } catch (Exception ex) {
+            Utils.log_error(ex.getMessage());
+            ex.printStackTrace();
+        }
+>>>>>>> upstream/master
     }
 }

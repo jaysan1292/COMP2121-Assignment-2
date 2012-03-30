@@ -4,10 +4,13 @@
  */
 package com.assign2.business;
 
+<<<<<<< HEAD
 import com.assign2.data.CustomerAccess;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+=======
+>>>>>>> upstream/master
 import java.util.regex.*;
 
 /**

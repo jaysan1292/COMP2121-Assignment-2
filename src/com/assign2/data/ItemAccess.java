@@ -5,11 +5,14 @@
 package com.assign2.data;
 
 import com.assign2.Utils;
+import com.assign2.business.Category;
 import com.assign2.business.Item;
+import java.awt.Image;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -23,8 +26,7 @@ public class ItemAccess extends CommonAccess {
     public static final String DESCRIPTION = "price";
     public static final String IMAGE = "image";
 
-    public Item findItem(String column, String value) throws SQLException {
-        Utils.log_info("Connecting to database...");
+    public static Item findItem(String column, String value) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -37,10 +39,25 @@ public class ItemAccess extends CommonAccess {
         }
 
         Item item =  new Item();
+        item.setItemId(resultSet.getInt(ITEM_ID));
+        item.setName(resultSet.getString(NAME));
+        item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, resultSet.getString(CATEGORY)));
+        item.setPrice(resultSet.getDouble(PRICE));
+        item.setDescription(resultSet.getString(DESCRIPTION));
+        // TODO: retrieve image from database and set it in code
 
         return item;
     }
     
-    public void addNewItem() {
+    public void addNewItem(int itemId, String name, Category category,double price,String description,Image image, int qtyInStock){
+        throw new NotImplementedException();
+    }
+    
+    public void deleteItem(int itemId){
+        throw new NotImplementedException();
+    }
+    
+    public void updateItem(int itemId, String column, String value){
+        throw new NotImplementedException();
     }
 }

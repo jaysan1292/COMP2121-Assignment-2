@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -36,7 +35,6 @@ public class CustomerAccess extends CommonAccess {
      * @throws SQLException if the specified customer was not found in the database. 
      */
     public static Customer findCustomer(String column, String value) throws SQLException {
-        Utils.log_info("Connecting to database...");
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -49,11 +47,11 @@ public class CustomerAccess extends CommonAccess {
         }
 
         Customer customer = new Customer();
-        customer.setCustomerId(resultSet.getInt("customer_id"));
-        customer.setFirstName(resultSet.getString("first_name"));
-        customer.setLastName(resultSet.getString("last_name"));
-        customer.setAddress(resultSet.getString("address"));
-        customer.setPhoneNumber(resultSet.getString("phone_number"));
+        customer.setCustomerId(resultSet.getInt(CUSTOMER_ID));
+        customer.setFirstName(resultSet.getString(FIRST_NAME));
+        customer.setLastName(resultSet.getString(LAST_NAME));
+        customer.setAddress(resultSet.getString(ADDRESS));
+        customer.setPhoneNumber(resultSet.getString(PHONE_NUMBER));
 
         Utils.log_info("Returned customer information:\n\t\tFirst name: %s\n\t\tLast name: %s", customer.getFirstName(), customer.getLastName());
 
@@ -61,7 +59,6 @@ public class CustomerAccess extends CommonAccess {
     }
 
     public static void addNewCustomer(String firstName, String lastName, String address, String phoneNumber) throws SQLException {
-        Utils.log_info("Connecting to database...");
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -73,23 +70,23 @@ public class CustomerAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
-    public static boolean deleteCustomer(int customerId) throws SQLException {
-        Utils.log_info("Connecting to database...");
+    public static void deleteCustomer(int customerId) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("DELETE FROM customer WHERE customer_id='%s';", customerId);
         Utils.log_info("Executing SQL query: %s", query);
 
-        try {
-            sqlStatement.executeUpdate(query);
-        } catch (SQLException ex) {
-            return false;
-        }
-        return true;
+        sqlStatement.executeUpdate(query);
     }
 
-    public static void updateCustomer(String column, String customerId, String newValue) throws SQLException {
-        throw new NotImplementedException();
+    public static void updateCustomer(int customerId, String column, String newValue) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("UPDATE customer SET %s='%s' WHERE customer_id=%s", column, newValue, customerId);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 }
