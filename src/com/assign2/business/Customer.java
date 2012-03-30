@@ -4,13 +4,10 @@
  */
 package com.assign2.business;
 
-<<<<<<< HEAD
 import com.assign2.data.CustomerAccess;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-=======
->>>>>>> upstream/master
 import java.util.regex.*;
 
 /**
@@ -33,6 +30,7 @@ public class Customer {
         this.lastName = lastName;
         this.address = address;
         this.phoneNumber = phoneNumber;
+
     }
 
     public int getCustomerId() {
@@ -83,6 +81,16 @@ public class Customer {
 
 
     }
+
+   public void CreateCustomer(String firstName, String lastName, String address, String phoneNumber) {
+        Customer newCustomer = new Customer(firstName, lastName, address, phoneNumber);
+        CustomerHandler _Handler = new CustomerHandler();
+      _Handler.saveNewCustomer(newCustomer);
+        
+    }
+
+    
+    
 
     public Customer findCustomerByLastName(String _column, String _value) {
 
