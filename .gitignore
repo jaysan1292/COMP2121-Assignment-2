@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-build/*
-nbproject/*
-
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-/dist/
-=======
 build*
 nbproject*
 
@@ -19,4 +7,3 @@ nbproject*
 *.jar
 *.war
 *.ear
->>>>>>> upstream/master
