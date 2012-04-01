@@ -9,43 +9,37 @@ package com.assign2.business;
  * @author janjong
  */
 public class OrderLine {
-    private int orderId;
-    private int itemId;
+    private Order order;
+    private Item item;
     private int quantity;
     private double total;
 
-    public OrderLine(int oId, int iID, int qty, double _total) {
-        Order orderObj = new Order();
-        Item itemObj = new Item();
-        orderId = orderObj.getOrderId();
-        itemId = itemObj.getItemId();
-        quantity = qty;
-        total = _total;
+    public OrderLine() {
     }
 
-    public int getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
     /**
-     * @param orderId the orderId to set
+     * @param order the orderId to set
      */
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     /**
      * @return the itemId
      */
-    public int getItemId() {
-        return itemId;
+    public Item getItem() {
+        return item;
     }
 
     /**
-     * @param itemId the itemId to set
+     * @param item the itemId to set
      */
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    public void setItem(Item item) {
+        this.item = item;
     }
 
     /**

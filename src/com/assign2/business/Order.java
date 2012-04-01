@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Order {
     private int orderId;
-    private int customerId;
+    private Customer customer;
     private Date date;
 
     public Order() {
@@ -35,15 +35,15 @@ public class Order {
     /**
      * @return the customerId
      */
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     /**
-     * @param customerId the customerId to set
+     * @param customer the customerId to set
      */
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     /**
