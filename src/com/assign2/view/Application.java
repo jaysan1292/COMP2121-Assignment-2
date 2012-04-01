@@ -37,17 +37,14 @@ public class Application extends JApplet {
         window.setVisible(true);
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Applet Methods">
     /** Initializes the applet Application */
     @Override
     public void init() {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        //<editor-fold defaultstate="collapsed" desc="Set Windows look and feel">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -62,19 +59,30 @@ public class Application extends JApplet {
             java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the applet */
+        //<editor-fold defaultstate="collapsed" desc="Create and display the applet">
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
+                    clearStatusBarText();
                 }
             });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        //</editor-fold>
     }
+    //</editor-fold>
 
+    public void setStatusBarText(String text){
+        lblStatusBarText.setText(String.format("  %s", text));
+    }
+    
+    public void clearStatusBarText(){
+        setStatusBarText("");
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="Generated Code">
     /** This method is called from within the init() method to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -84,26 +92,183 @@ public class Application extends JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jInternalFrame1 = new javax.swing.JInternalFrame();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
+        barStatusBar = new javax.swing.JPanel();
+        lblStatusBarText = new javax.swing.JLabel();
+        mnuMainMenu = new javax.swing.JMenuBar();
+        mnuFile = new javax.swing.JMenu();
+        itmExit = new javax.swing.JMenuItem();
+        mnuView = new javax.swing.JMenu();
+        mnuFont = new javax.swing.JMenu();
+        itmDefault = new javax.swing.JMenuItem();
+        itmSegoeUI = new javax.swing.JMenuItem();
+        itmLucida = new javax.swing.JMenuItem();
+
+        jInternalFrame1.setMaximizable(true);
+        jInternalFrame1.setResizable(true);
+        jInternalFrame1.setTitle("Customer");
+        jInternalFrame1.setVisible(true);
+
+        jTextField1.setFont(jTextField1.getFont());
+        jTextField1.setText("First");
+
+        jTextField2.setFont(jTextField2.getFont());
+        jTextField2.setText("Last");
+        jTextField2.setToolTipText("");
+
+        jLabel1.setFont(jLabel1.getFont());
+        jLabel1.setText("Full Name");
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                .addGap(74, 74, 74))
+        );
+
+        jInternalFrame1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextField1, jTextField2});
+
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(268, Short.MAX_VALUE))
+        );
+
+        setBackground(new java.awt.Color(240, 240, 240));
+        setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+
+        jDesktopPane1.setBackground(new java.awt.Color(100, 100, 100));
+
+        barStatusBar.setPreferredSize(new java.awt.Dimension(595, 22));
+
+        lblStatusBarText.setFont(getFont());
+        lblStatusBarText.setText("  jLabel1");
+        lblStatusBarText.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout barStatusBarLayout = new javax.swing.GroupLayout(barStatusBar);
+        barStatusBar.setLayout(barStatusBarLayout);
+        barStatusBarLayout.setHorizontalGroup(
+            barStatusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblStatusBarText, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+        );
+        barStatusBarLayout.setVerticalGroup(
+            barStatusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblStatusBarText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+        );
+
+        mnuFile.setMnemonic('f');
+        mnuFile.setText("File");
+
+        itmExit.setMnemonic('x');
+        itmExit.setText("Exit");
+        itmExit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                itmExitMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                itmExitMouseExited(evt);
+            }
+        });
+        mnuFile.add(itmExit);
+
+        mnuMainMenu.add(mnuFile);
+
+        mnuView.setMnemonic('v');
+        mnuView.setText("View");
+
+        mnuFont.setText("Change Font");
+        mnuFont.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mnuFontMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mnuFontMouseExited(evt);
+            }
+        });
+
+        itmDefault.setText("Default");
+        mnuFont.add(itmDefault);
+
+        itmSegoeUI.setText("Segoe UI");
+        mnuFont.add(itmSegoeUI);
+
+        itmLucida.setText("Lucida Grande");
+        mnuFont.add(itmLucida);
+
+        mnuView.add(mnuFont);
+
+        mnuMainMenu.add(mnuView);
+
+        setJMenuBar(mnuMainMenu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+            .addComponent(barStatusBar, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                .addGap(4, 4, 4)
+                .addComponent(barStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Event Handlers">
+    
+    private void mnuFontMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuFontMouseEntered
+        setStatusBarText("Changes the current font.");
+    }//GEN-LAST:event_mnuFontMouseEntered
+
+    private void mnuFontMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuFontMouseExited
+        clearStatusBarText();
+    }//GEN-LAST:event_mnuFontMouseExited
+
+    private void itmExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmExitMouseEntered
+        setStatusBarText("Exits the appliation.");
+    }//GEN-LAST:event_itmExitMouseEntered
+
+    private void itmExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmExitMouseExited
+        clearStatusBarText();
+    }//GEN-LAST:event_itmExitMouseExited
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Generated Code">
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel barStatusBar;
+    private javax.swing.JMenuItem itmDefault;
+    private javax.swing.JMenuItem itmExit;
+    private javax.swing.JMenuItem itmLucida;
+    private javax.swing.JMenuItem itmSegoeUI;
     private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lblStatusBarText;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenu mnuFont;
+    private javax.swing.JMenuBar mnuMainMenu;
+    private javax.swing.JMenu mnuView;
     // End of variables declaration//GEN-END:variables
+    //</editor-fold>
 }
