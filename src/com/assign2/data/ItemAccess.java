@@ -25,6 +25,7 @@ public class ItemAccess extends CommonAccess {
     public static final String PRICE = "price";
     public static final String DESCRIPTION = "price";
     public static final String IMAGE = "image";
+    public static final String QUANTITY_IN_STOCK = "quantity_in_stock";
 
     private ItemAccess() {
         super();
@@ -53,15 +54,36 @@ public class ItemAccess extends CommonAccess {
         return item;
     }
 
-    public void addNewItem(int itemId, String name, Category category, double price, String description, Image image, int qtyInStock) {
-        throw new NotImplementedException();
+    public void addNewItem(int itemId, String name, Category category, double price, String description, Image image, int qtyInStock) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = "INSERT INTO item ";
+        query += "(item_id, name, category, price, description, image, quantity_in_stock) ";
+        query += String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                               itemId, name, category.getCategoryId(), price, description, null, qtyInStock);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 
-    public void deleteItem(int itemId) {
-        throw new NotImplementedException();
+    public void deleteItem(int itemId) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("DELETE FROM item WHERE item_id='%s';", itemId);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 
-    public void updateItem(int itemId, String column, String value) {
-        throw new NotImplementedException();
+    public void updateItem(int itemId, String column, String newValue) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("UPDATE item SET %s='%s' WHERE item_id=%s", column, newValue, itemId);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 }
