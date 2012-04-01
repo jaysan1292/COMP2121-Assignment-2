@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.assign2.data;
 
 import com.assign2.Utils;
@@ -25,12 +21,27 @@ public class CategoryAccess extends CommonAccess {
         super();
     }
 
-    public void addNewCategory(int categoryId, String categoryName, Category parentCategory) {
-        throw new NotImplementedException();
+    public void addNewCategory(String categoryName, Category parentCategory) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = "INSERT INTO category ";
+        query += "(category_name, parent_category_id) ";
+        query += String.format("VALUES('%s', '%s');", categoryName, parentCategory);
+
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 
-    public void deleteCategory(int categoryId) {
-        throw new NotImplementedException();
+    public void deleteCategory(int categoryId) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("DELETE FROM category WHERE category_id='%s';", categoryId);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 
     public static Category findCategory(String column, String value) throws SQLException {
@@ -58,7 +69,13 @@ public class CategoryAccess extends CommonAccess {
         return category;
     }
 
-    public void updateCategory(int categoryId, String column, String newValue) {
-        throw new NotImplementedException();
+    public void updateCategory(int categoryId, String column, String newValue) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("UPDATE category SET %s='%s' WHERE categoryId=%s", column, newValue, categoryId);
+        Utils.log_info("Executing SQL query: %s", query);
+
+        sqlStatement.executeUpdate(query);
     }
 }
