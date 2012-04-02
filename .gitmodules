@@ -1,0 +1,3 @@
+[submodule "lib/imgscalr"]
+	path = lib/imgscalr
+	url = git://github.com/thebuzzmedia/imgscalr.git

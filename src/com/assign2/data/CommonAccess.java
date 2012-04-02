@@ -25,7 +25,8 @@ public abstract class CommonAccess {
             Connection conn = DriverManager.getConnection(host, user, pass);
             connection = conn;
         } catch (SQLException ex) {
-            Utils.log_error(ex.getMessage());
+                Utils.log_error("Could not connect to database.");
+                System.exit(1);
         }
     }
 
