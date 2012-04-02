@@ -50,7 +50,7 @@ public class Utils {
     
     public static void log_error(String s) {
         StackTraceElement frame = getFrame();
-        System.out.println(String.format("[ERROR (%s:%s): %s", frame.getFileName(), frame.getLineNumber(), s));
+        System.out.println(String.format("[ERROR] (%s:%s): %s", frame.getFileName(), frame.getLineNumber(), s));
     }
     
     public static void log_error(String s, Object... o) {
