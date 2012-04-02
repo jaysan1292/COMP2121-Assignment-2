@@ -10,6 +10,10 @@
  */
 package com.assign2.view;
 
+import com.assign2.Utils;
+import com.assign2.data.ItemAccess;
+import java.sql.SQLException;
+import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
@@ -18,25 +22,24 @@ import javax.swing.JFrame;
  * @author Jason Recillo
  */
 public class Application extends JApplet {
-    
     /**
      * This applet can be run as an application!
      * If run in a browser, the main method will be ignored,
      * whereas if run as an executable, the main method will execute.
      * @param args 
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
         JApplet applet = new Application();
         applet.init();
         applet.start();
-        
+
         JFrame window = new JFrame();
         window.setContentPane(applet);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.pack();
         window.setVisible(true);
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="Applet Methods">
     /** Initializes the applet Application */
     @Override
@@ -74,14 +77,14 @@ public class Application extends JApplet {
     }
     //</editor-fold>
 
-    public void setStatusBarText(String text){
+    public void setStatusBarText(String text) {
         lblStatusBarText.setText(String.format("  %s", text));
     }
-    
-    public void clearStatusBarText(){
+
+    public void clearStatusBarText() {
         setStatusBarText("");
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="Generated Code">
     /** This method is called from within the init() method to
      * initialize the form.
@@ -92,15 +95,20 @@ public class Application extends JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jInternalFrame1 = new javax.swing.JInternalFrame();
+        frmNewCustomer = new javax.swing.JInternalFrame();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
+        jPanel1 = new javax.swing.JPanel();
         barStatusBar = new javax.swing.JPanel();
         lblStatusBarText = new javax.swing.JLabel();
+        frmItem = new javax.swing.JInternalFrame();
+        lblItemImage = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         mnuMainMenu = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
+        itmNewCustomer = new javax.swing.JMenuItem();
         itmExit = new javax.swing.JMenuItem();
         mnuView = new javax.swing.JMenu();
         mnuFont = new javax.swing.JMenu();
@@ -108,10 +116,10 @@ public class Application extends JApplet {
         itmSegoeUI = new javax.swing.JMenuItem();
         itmLucida = new javax.swing.JMenuItem();
 
-        jInternalFrame1.setMaximizable(true);
-        jInternalFrame1.setResizable(true);
-        jInternalFrame1.setTitle("Customer");
-        jInternalFrame1.setVisible(true);
+        frmNewCustomer.setMaximizable(true);
+        frmNewCustomer.setResizable(true);
+        frmNewCustomer.setTitle("Customer");
+        frmNewCustomer.setVisible(true);
 
         jTextField1.setFont(jTextField1.getFont());
         jTextField1.setText("First");
@@ -123,11 +131,11 @@ public class Application extends JApplet {
         jLabel1.setFont(jLabel1.getFont());
         jLabel1.setText("Full Name");
 
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+        javax.swing.GroupLayout frmNewCustomerLayout = new javax.swing.GroupLayout(frmNewCustomer.getContentPane());
+        frmNewCustomer.getContentPane().setLayout(frmNewCustomerLayout);
+        frmNewCustomerLayout.setHorizontalGroup(
+            frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmNewCustomerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
@@ -137,23 +145,37 @@ public class Application extends JApplet {
                 .addGap(74, 74, 74))
         );
 
-        jInternalFrame1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextField1, jTextField2});
+        frmNewCustomerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextField1, jTextField2});
 
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+        frmNewCustomerLayout.setVerticalGroup(
+            frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmNewCustomerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(268, Short.MAX_VALUE))
+                .addContainerGap(276, Short.MAX_VALUE))
         );
 
         setBackground(new java.awt.Color(240, 240, 240));
         setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
 
         jDesktopPane1.setBackground(new java.awt.Color(100, 100, 100));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBounds(50, 50, 100, 100);
+        jDesktopPane1.add(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         barStatusBar.setPreferredSize(new java.awt.Dimension(595, 22));
 
@@ -172,8 +194,50 @@ public class Application extends JApplet {
             .addComponent(lblStatusBarText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
         );
 
+        frmItem.setVisible(true);
+
+        lblItemImage.setText("jLabel2");
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout frmItemLayout = new javax.swing.GroupLayout(frmItem.getContentPane());
+        frmItem.getContentPane().setLayout(frmItemLayout);
+        frmItemLayout.setHorizontalGroup(
+            frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmItemLayout.createSequentialGroup()
+                .addGroup(frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(frmItemLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblItemImage))
+                    .addComponent(jButton1))
+                .addContainerGap(371, Short.MAX_VALUE))
+        );
+        frmItemLayout.setVerticalGroup(
+            frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmItemLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblItemImage)
+                .addGap(27, 27, 27)
+                .addComponent(jButton1)
+                .addContainerGap(270, Short.MAX_VALUE))
+        );
+
         mnuFile.setMnemonic('f');
         mnuFile.setText("File");
+
+        itmNewCustomer.setMnemonic('u');
+        itmNewCustomer.setText("New Customer");
+        itmNewCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmNewCustomerActionPerformed(evt);
+            }
+        });
+        mnuFile.add(itmNewCustomer);
 
         itmExit.setMnemonic('x');
         itmExit.setText("Exit");
@@ -223,6 +287,11 @@ public class Application extends JApplet {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
             .addComponent(barStatusBar, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 59, Short.MAX_VALUE)
+                    .addComponent(frmItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 59, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,11 +299,16 @@ public class Application extends JApplet {
                 .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addGap(4, 4, 4)
                 .addComponent(barStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 42, Short.MAX_VALUE)
+                    .addComponent(frmItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 43, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Event Handlers">
-    
+
     private void mnuFontMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuFontMouseEntered
         setStatusBarText("Changes the current font.");
     }//GEN-LAST:event_mnuFontMouseEntered
@@ -251,19 +325,37 @@ public class Application extends JApplet {
         clearStatusBarText();
     }//GEN-LAST:event_itmExitMouseExited
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            ImageIcon icon = new ImageIcon(ItemAccess.getItemImage(1, true));
+
+            lblItemImage.setIcon(icon);
+        } catch (SQLException ex) {
+            Utils.log_error(ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void itmNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNewCustomerActionPerformed
+        //
+    }//GEN-LAST:event_itmNewCustomerActionPerformed
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Generated Code">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel barStatusBar;
+    private javax.swing.JInternalFrame frmItem;
+    private javax.swing.JInternalFrame frmNewCustomer;
     private javax.swing.JMenuItem itmDefault;
     private javax.swing.JMenuItem itmExit;
     private javax.swing.JMenuItem itmLucida;
+    private javax.swing.JMenuItem itmNewCustomer;
     private javax.swing.JMenuItem itmSegoeUI;
+    private javax.swing.JButton jButton1;
     private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lblItemImage;
     private javax.swing.JLabel lblStatusBarText;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuFont;

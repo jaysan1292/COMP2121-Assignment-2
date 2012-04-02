@@ -4,8 +4,6 @@
  */
 package com.assign2.business;
 
-import java.awt.Image;
-
 /**
  *
  * @author janjong
@@ -16,7 +14,7 @@ public class Item {
     private Category category;
     private double price;
     private String description;
-    private Image image;
+    private String image;
     private int qtyInStock;
 
     /**
@@ -97,14 +95,14 @@ public class Item {
     /**
      * @return the Image
      */
-    public Image getImage() {
+    public String getImage() {
         return image;
     }
 
     /**
      * @param image the Image to set
      */
-    public Item setImage(Image image) {
+    public Item setImage(String image) {
         this.image = image;
         return this;
     }

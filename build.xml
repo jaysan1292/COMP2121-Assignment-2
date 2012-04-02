@@ -85,7 +85,7 @@
                 <param name="-constructors" />
                 <param name="-edgefontname" value="Courier New" />
                 <param name="-edgefontsize" value="12" />
-                <param name="-hide" value="java.*" />
+                <param name="-hide" value="^java.*" />
                 <param name="-inferdep" />
                 <param name="-nodefontabstractname" value="Courier New" />
                 <param name="-nodefontclassabstractname" value="Courier New" />
