@@ -16,7 +16,11 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            OrderAccess.findOrder(OrderAccess.ORDER_ID, "5");
+            OrderLineAccess.addNewOrderLine(OrderAccess.findOrder(OrderAccess.ORDER_ID, "1"), ItemAccess.findItem(ItemAccess.ITEM_ID, "25"), 3);
+            System.out.println("-------------------------------------------------------------------------------------");
+            OrderLineAccess.updateOrderLine(1, 25, 1);
+            System.out.println("-------------------------------------------------------------------------------------");
+            OrderLineAccess.deleteOrderLine(1, 25);
         } catch (Exception ex) {
             Utils.log_error(ex.getMessage());
             ex.printStackTrace();
