@@ -20,6 +20,10 @@ public class CategoryAccess extends CommonAccess {
         super();
     }
 
+    public void addNewCategory(Category category) throws SQLException {
+        addNewCategory(category.getCategoryName(), category.getParentCategory());
+    }
+
     public void addNewCategory(String categoryName, Category parentCategory) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -33,6 +37,9 @@ public class CategoryAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
+    public void deleteCategory(Category category) throws SQLException{
+        deleteCategory(category.getCategoryId());
+    }
     public void deleteCategory(int categoryId) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -68,6 +75,9 @@ public class CategoryAccess extends CommonAccess {
         return category;
     }
 
+    public void updateCategory(Category category, String column, String newValue) throws SQLException {
+        updateCategory(category.getCategoryId(), column, newValue);
+    }
     public void updateCategory(int categoryId, String column, String newValue) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();

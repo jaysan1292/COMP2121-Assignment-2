@@ -54,6 +54,10 @@ public class CustomerAccess extends CommonAccess {
         return customer;
     }
 
+    public static void addNewCustomer(Customer customer) throws SQLException {
+        addNewCustomer(customer.getFirstName(), customer.getLastName(), customer.getAddress(), customer.getPhoneNumber());
+    }
+
     public static void addNewCustomer(String firstName, String lastName, String address, String phoneNumber) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();

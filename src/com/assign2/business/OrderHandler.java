@@ -4,7 +4,8 @@
  */
 package com.assign2.business;
 
-import com.assign2.data.CustomerAccess;
+import com.assign2.data.ItemAccess;
+import java.sql.SQLException;
 
 /**
  *
@@ -17,12 +18,15 @@ public class OrderHandler {
     public void processNewOrder() {
     }
 
-    public void addItemsToOrder(int itemId, int qty) {
-        //Item item = ItemAccess.findItem( ItemAccess.ITEM_ID, String.valueOf( itemId ) );
-        //addItemsToOrder( item, qty );
+    public void addItemsToOrder(Order order, int itemId, int qty) throws SQLException {
+        addItemsToOrder(order, ItemAccess.findItem(ItemAccess.ITEM_ID, String.valueOf(itemId)), qty);
     }
 
-    public void addItemsToOrder(Item item, int qty) {
-        //
+    public void addItemsToOrder(Order order, Item item, int qty) {
+        // checkIfOrderLineExists(order, item, qty)
+        // check database for current order and item
+        // if SQLException is thrown in function, return false
+        // if query executes without error, return true
+        // it's 12:31AM, no time to implement >:
     }
 }

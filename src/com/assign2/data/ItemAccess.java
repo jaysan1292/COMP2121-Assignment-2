@@ -53,6 +53,10 @@ public class ItemAccess extends CommonAccess {
         return item;
     }
 
+    public void addNewItem(Item item) throws SQLException {
+        addNewItem(item.getItemId(), item.getName(), item.getCategory(), item.getPrice(), item.getDescription(), item.getImage(), item.getQtyInStock());
+    }
+
     public void addNewItem(int itemId, String name, Category category, double price, String description, Image image, int qtyInStock) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -66,6 +70,10 @@ public class ItemAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
+    public void deleteItem(Item item) throws SQLException {
+        deleteItem(item.getItemId());
+    }
+
     public void deleteItem(int itemId) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -74,6 +82,10 @@ public class ItemAccess extends CommonAccess {
         Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
+    }
+
+    public void updateItem(Item item, String column, String newValue) throws SQLException {
+        updateItem(item.getItemId(), column, newValue);
     }
 
     public void updateItem(int itemId, String column, String newValue) throws SQLException {

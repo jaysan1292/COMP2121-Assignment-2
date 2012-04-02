@@ -3,56 +3,44 @@ package com.assign2.business;
 import com.assign2.Utils;
 import com.assign2.data.CustomerAccess;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
  * @author janjong
  */
 public class CustomerHandler {
-
-    public void saveNewCustomer(Customer customer) {
-
-        Utils.log_info("Sending new customer information to database");
+    public static void saveNewCustomer(Customer customer) {
+        Utils.log_info("Saving %s's information to database...", customer.getFirstName());
 
         try {
-            CustomerAccess.addNewCustomer(customer.getFirstName(), customer.getLastName(), customer.getAddress(), customer.getPhoneNumber());
+            CustomerAccess.addNewCustomer(customer);
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Utils.log_error(ex.getMessage());
         }
-
-
     }
 
-    public void UpdateExistingCustomer() {
+    public static void updateExistingCustomer() {
         Utils.log_info("Updating existing customer information");
-
-
+        throw new NotImplementedException();
     }
 
-    public Customer findCusomter(String column, String _value) {
-        Customer _customer = new Customer();
-
+    public Customer findCustomer(String column, String value) {
         try {
             Utils.log_info("Searching for customer information");
-            _customer = CustomerAccess.findCustomer(column, _value);
-
-
+            Customer customer = CustomerAccess.findCustomer(column, value);
+            return customer;
         } catch (SQLException ex) {
-
-            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
-
+            Utils.log_error(ex.getMessage());
+            return null;
         }
-        return _customer;
     }
 
-    public void removeCustomer(int CId) {
+    public static void removeCustomer(int customerId) {
         try {
-            CustomerAccess.deleteCustomer(CId);
+            CustomerAccess.deleteCustomer(customerId);
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Utils.log_error(ex.getMessage());
         }
-
     }
 }
