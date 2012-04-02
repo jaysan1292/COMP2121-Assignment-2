@@ -28,8 +28,9 @@ public class Order {
     /**
      * @param orderId the orderId to set
      */
-    public void setOrderId(int orderId) {
+    public Order setOrderId(int orderId) {
         this.orderId = orderId;
+        return this;
     }
 
     /**
@@ -42,8 +43,9 @@ public class Order {
     /**
      * @param customer the customerId to set
      */
-    public void setCustomer(Customer customer) {
+    public Order setCustomer(Customer customer) {
         this.customer = customer;
+        return this;
     }
 
     /**
@@ -56,7 +58,8 @@ public class Order {
     /**
      * @param date the date to set
      */
-    public void setDate(Date date) {
+    public Order setDate(Date date) {
         this.date = date;
+        return this;
     }
 }

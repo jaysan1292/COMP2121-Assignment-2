@@ -29,8 +29,9 @@ public class Item {
     /**
      * @param itemId the itemId to set
      */
-    public void setItemId(int itemId) {
+    public Item setItemId(int itemId) {
         this.itemId = itemId;
+        return this;
     }
 
     /**
@@ -43,8 +44,9 @@ public class Item {
     /**
      * @param name the name to set
      */
-    public void setName(String name) {
+    public Item setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -57,8 +59,9 @@ public class Item {
     /**
      * @param category the category to set
      */
-    public void setCategory(Category category) {
+    public Item setCategory(Category category) {
         this.category = category;
+        return this;
     }
 
     /**
@@ -71,8 +74,9 @@ public class Item {
     /**
      * @param price the price to set
      */
-    public void setPrice(double price) {
+    public Item setPrice(double price) {
         this.price = price;
+        return this;
     }
 
     /**
@@ -85,8 +89,9 @@ public class Item {
     /**
      * @param description the description to set
      */
-    public void setDescription(String description) {
+    public Item setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -99,8 +104,9 @@ public class Item {
     /**
      * @param image the Image to set
      */
-    public void setImage(Image image) {
+    public Item setImage(Image image) {
         this.image = image;
+        return this;
     }
 
     /**
@@ -113,7 +119,8 @@ public class Item {
     /**
      * @param qtyInStock the qtyInStock to set
      */
-    public void setQtyInStock(int qtyInStock) {
+    public Item setQtyInStock(int qtyInStock) {
         this.qtyInStock = qtyInStock;
+        return this;
     }
 }

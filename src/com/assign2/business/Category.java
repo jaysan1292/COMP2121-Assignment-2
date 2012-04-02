@@ -23,8 +23,9 @@ public class Category {
     /**
      * @param categoryId the categoryId to set
      */
-    public void setCategoryId(int categoryId) {
+    public Category setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+        return this;
     }
 
     /**
@@ -37,16 +38,18 @@ public class Category {
     /**
      * @param categoryName the categoryName to set
      */
-    public void setCategoryName(String categoryName) {
+    public Category setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+        return this;
     }
 
     public Category getParentCategory() {
         return parentCategory;
     }
 
-    public void setParentCategory(Category parentCategory) {
+    public Category setParentCategory(Category parentCategory) {
         this.parentCategory = parentCategory;
+        return this;
     }
     
 }

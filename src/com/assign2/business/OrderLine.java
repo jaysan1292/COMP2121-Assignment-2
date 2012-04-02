@@ -24,8 +24,9 @@ public class OrderLine {
     /**
      * @param order the orderId to set
      */
-    public void setOrder(Order order) {
+    public OrderLine setOrder(Order order) {
         this.order = order;
+        return this;
     }
 
     /**
@@ -38,8 +39,9 @@ public class OrderLine {
     /**
      * @param item the itemId to set
      */
-    public void setItem(Item item) {
+    public OrderLine setItem(Item item) {
         this.item = item;
+        return this;
     }
 
     /**
@@ -52,8 +54,9 @@ public class OrderLine {
     /**
      * @param quantity the quantity to set
      */
-    public void setQuantity(int quantity) {
+    public OrderLine setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     /**
@@ -66,7 +69,8 @@ public class OrderLine {
     /**
      * @param total the total to set
      */
-    public void setTotal(double total) {
+    public OrderLine setTotal(double total) {
         this.total = total;
+        return this;
     }
 }

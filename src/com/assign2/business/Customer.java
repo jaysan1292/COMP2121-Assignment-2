@@ -20,13 +20,6 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String address, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
-
     public int getCustomerId() {
         return customerId;
     }
@@ -47,23 +40,27 @@ public class Customer {
         return phoneNumber;
     }
 
-    public void setCustomerId(int customerId) {
+    public Customer setCustomerId(int customerId) {
         this.customerId = customerId;
+        return this;
     }
 
-    public void setFirstName(String firstName) {
+    public Customer setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
-    public void setLastName(String lastName) {
+    public Customer setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
-    public void setAddress(String address) {
+    public Customer setAddress(String address) {
         this.address = address;
+        return this;
     }
 
-    public void setPhoneNumber(String phoneNumber) throws IllegalArgumentException {
+    public Customer setPhoneNumber(String phoneNumber) throws IllegalArgumentException {
         Pattern pattern = Pattern.compile("^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$");
         Matcher matcher = pattern.matcher(phoneNumber);
         if (matcher.matches()) {
@@ -71,6 +68,11 @@ public class Customer {
         } else {
             throw new IllegalArgumentException("Phone number was not valid.");
         }
+        return this;
+    }
 
+    @Override
+    public String toString() {
+        return String.format("Customer #%d: %s %s", customerId, firstName, lastName);
     }
 }
