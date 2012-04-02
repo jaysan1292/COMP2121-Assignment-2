@@ -123,4 +123,8 @@ public class Item {
         this.qtyInStock = qtyInStock;
         return this;
     }
+
+    public boolean equals(Item otherItem) {
+        return itemId == otherItem.itemId;
+    }
 }
