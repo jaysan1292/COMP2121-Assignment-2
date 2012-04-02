@@ -8,6 +8,11 @@ import com.assign2.Utils;
 import com.assign2.business.Category;
 import com.assign2.business.Item;
 import java.awt.Image;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,5 +101,46 @@ public class ItemAccess extends CommonAccess {
         Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
+    }
+
+    public static String getItemImage(int itemId) throws SQLException {
+        Utils.log_info("Retrieving image for item %s from database...", itemId);
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("Select image from item WHERE item_id=%s", itemId);
+        ResultSet result = sqlStatement.executeQuery(query);
+
+        String imgData = "";
+        int lengthOfFile = 0;
+        if (result.next()) {
+            try {
+                imgData = result.getString(IMAGE);
+                lengthOfFile = imgData.length();
+            } catch (Exception ex) {
+                if (ex.getClass() == SQLException.class || ex.getClass() == NullPointerException.class) {
+                    throw new SQLException(String.format("Image was not found for item with item id=%s.", itemId));
+                } else {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        byte[] img = new byte[lengthOfFile];
+
+        InputStream readImg = result.getBinaryStream(IMAGE);
+        try {
+            int index = readImg.read(img, 0, lengthOfFile);
+
+            new File("tmp").mkdir();
+            DataOutputStream os = new DataOutputStream(new FileOutputStream(String.format("tmp/%s_%s.jpg", itemId, index)));
+            Utils.log_info("Saved image in tmp/%s_%s.jpg", itemId, index);
+            os.write(img);
+            os.close();
+        } catch (IOException ex) {
+            Utils.log_error(ex.getMessage());
+        }
+
+
+        return null;
     }
 }

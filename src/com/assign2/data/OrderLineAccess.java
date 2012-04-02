@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,8 +28,10 @@ public class OrderLineAccess extends CommonAccess {
         super();
     }
 
-    public static OrderLine findOrderLine(String column, String value) throws SQLException,IllegalArgumentException {
-        if (!column.equals(ORDER_ID) || !column.equals(ITEM_ID)) throw new IllegalArgumentException(String.format("Cannot search using \"%s\"", column));
+    public static OrderLine[] findOrderLine(String column, String value) throws SQLException, IllegalArgumentException {
+        if (!(column.equals(ORDER_ID) || column.equals(ITEM_ID))) {
+            throw new IllegalArgumentException(String.format("Cannot search using \"%s\"", column));
+        }
 
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -40,14 +43,20 @@ public class OrderLineAccess extends CommonAccess {
         if (!(resultSet.first())) {
             throw new SQLException("Result set returned no data.");
         }
+        ArrayList<OrderLine> orderLines = new ArrayList<OrderLine>();
 
-        OrderLine ol = new OrderLine();
-        ol.setOrder(OrderAccess.findOrder(OrderAccess.ORDER_ID, resultSet.getString(ORDER_ID)));
-        ol.setItem(ItemAccess.findItem(ItemAccess.ITEM_ID, resultSet.getString(ITEM_ID)));
-        ol.setQuantity(resultSet.getInt(QUANTITY));
-        ol.setTotal(resultSet.getDouble(TOTAL));
+        do {
+            OrderLine ol = new OrderLine();
+            ol.setOrder(OrderAccess.findOrder(OrderAccess.ORDER_ID, resultSet.getString(ORDER_ID)));
+            ol.setItem(ItemAccess.findItem(ItemAccess.ITEM_ID, resultSet.getString(ITEM_ID)));
+            ol.setQuantity(resultSet.getInt(QUANTITY));
+            ol.setTotal(resultSet.getDouble(TOTAL));
+            orderLines.add(ol);
+            Utils.log_debug("Order Line found: order_id:%s | item_id: %s | quantity: %s | total: %.2f",
+                            ol.getOrder().getOrderId(), ol.getItem().getItemId(), ol.getQuantity(), ol.getTotal());
+        } while (resultSet.next());
 
-        return ol;
+        return orderLines.toArray(new OrderLine[1]);
     }
 
     public static void addNewOrderLine(int orderId, int itemId, int quantity) throws SQLException {
