@@ -35,7 +35,7 @@ public class ItemAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("SELECT * FROM item WHERE %s='%s';", column, value);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
         ResultSet resultSet = sqlStatement.executeQuery(query);
 
         if (!(resultSet.first())) {
@@ -61,7 +61,7 @@ public class ItemAccess extends CommonAccess {
         query += "(item_id, name, category, price, description, image, quantity_in_stock) ";
         query += String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                                itemId, name, category.getCategoryId(), price, description, null, qtyInStock);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }
@@ -71,7 +71,7 @@ public class ItemAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("DELETE FROM item WHERE item_id='%s';", itemId);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }
@@ -81,7 +81,7 @@ public class ItemAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("UPDATE item SET %s='%s' WHERE item_id=%s", column, newValue, itemId);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }

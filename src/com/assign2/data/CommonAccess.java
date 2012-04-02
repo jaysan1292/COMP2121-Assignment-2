@@ -1,5 +1,4 @@
 //TODO: Data validation for all data access classes
-//TODO: Fix all NotImplementedExceptions
 package com.assign2.data;
 
 import com.assign2.Utils;

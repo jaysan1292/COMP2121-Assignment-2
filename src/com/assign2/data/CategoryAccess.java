@@ -28,7 +28,7 @@ public class CategoryAccess extends CommonAccess {
         query += "(category_name, parent_category_id) ";
         query += String.format("VALUES('%s', '%s');", categoryName, parentCategory);
 
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }
@@ -38,7 +38,7 @@ public class CategoryAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("DELETE FROM category WHERE category_id='%s';", categoryId);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }
@@ -49,7 +49,7 @@ public class CategoryAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("SELECT * FROM category WHERE %s='%s';", column, value);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
         ResultSet resultSet = sqlStatement.executeQuery(query);
 
         if (!(resultSet.first())) {
@@ -73,7 +73,7 @@ public class CategoryAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("UPDATE category SET %s='%s' WHERE categoryId=%s", column, newValue, categoryId);
-        Utils.log_info("Executing SQL query: %s", query);
+        Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
     }
