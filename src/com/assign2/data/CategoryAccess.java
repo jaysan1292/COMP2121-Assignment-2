@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -37,9 +38,10 @@ public class CategoryAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
-    public void deleteCategory(Category category) throws SQLException{
+    public void deleteCategory(Category category) throws SQLException {
         deleteCategory(category.getCategoryId());
     }
+
     public void deleteCategory(int categoryId) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -78,6 +80,7 @@ public class CategoryAccess extends CommonAccess {
     public void updateCategory(Category category, String column, String newValue) throws SQLException {
         updateCategory(category.getCategoryId(), column, newValue);
     }
+
     public void updateCategory(int categoryId, String column, String newValue) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
@@ -86,5 +89,24 @@ public class CategoryAccess extends CommonAccess {
         Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
+    }
+
+    public static Category[] getCategories() throws SQLException {
+        ArrayList<Category> categoryList = new ArrayList<Category>();
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = "SELECT * FROM category;";
+        ResultSet results = sqlStatement.executeQuery(query);
+
+        while (results.next()) {
+            Category category = new Category();
+            category.setCategoryId(results.getInt(CATEGORY_ID));
+            category.setCategoryName(results.getString(CATEGORY_NAME));
+            category.setParentCategory(findCategory(CATEGORY_ID, results.getString(PARENT_CATEGORY_ID)));
+            categoryList.add(category);
+            Utils.log_debug("Retriving information for %s.", category.getCategoryName());
+        }
+        return categoryList.toArray(new Category[1]);
     }
 }

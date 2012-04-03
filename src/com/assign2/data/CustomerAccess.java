@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -96,5 +97,26 @@ public class CustomerAccess extends CommonAccess {
         Utils.log_debug("Executing SQL query: %s", query);
 
         sqlStatement.executeUpdate(query);
+    }
+    
+    public static Customer[] getCustomers() throws SQLException{
+        ArrayList<Customer> customerList = new ArrayList<Customer>();
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+        
+        String query = "SELECT * FROM customer;";
+        ResultSet results = sqlStatement.executeQuery(query);
+        
+        while(results.next()){
+            Customer customer = new Customer();
+            customer.setCustomerId(results.getInt(CUSTOMER_ID));
+            customer.setFirstName(results.getString(FIRST_NAME));
+            customer.setLastName(results.getString(LAST_NAME));
+            customer.setAddress(results.getString(ADDRESS));
+            customer.setPhoneNumber(results.getString(PHONE_NUMBER));
+            customerList.add(customer);
+            Utils.log_debug("Retriving information for customer %s.",customer.getCustomerId());
+        }
+        return customerList.toArray(new Customer[1]);
     }
 }
