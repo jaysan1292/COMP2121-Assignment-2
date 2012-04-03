@@ -11,11 +11,15 @@
 package com.assign2.view;
 
 import com.assign2.Utils;
-import com.assign2.data.ItemAccess;
+import com.assign2.data.CustomerAccess;
+import com.assign2.business.Customer;
+import java.awt.Dialog.ModalExclusionType;
 import java.sql.SQLException;
-import javax.swing.ImageIcon;
+import java.util.ArrayList;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -95,17 +99,21 @@ public class Application extends JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        frmNewCustomer = new javax.swing.JInternalFrame();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jDesktopPane1 = new javax.swing.JDesktopPane();
-        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         barStatusBar = new javax.swing.JPanel();
         lblStatusBarText = new javax.swing.JLabel();
-        frmItem = new javax.swing.JInternalFrame();
-        lblItemImage = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        frmWelcome = new javax.swing.JPanel();
+        frmCustomer = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblCustomerList = new javax.swing.JTable();
+        btnLoadCustomers = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        frmItem = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        frmOrders = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         mnuMainMenu = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         itmNewCustomer = new javax.swing.JMenuItem();
@@ -116,66 +124,10 @@ public class Application extends JApplet {
         itmSegoeUI = new javax.swing.JMenuItem();
         itmLucida = new javax.swing.JMenuItem();
 
-        frmNewCustomer.setMaximizable(true);
-        frmNewCustomer.setResizable(true);
-        frmNewCustomer.setTitle("Customer");
-        frmNewCustomer.setVisible(true);
-
-        jTextField1.setFont(jTextField1.getFont());
-        jTextField1.setText("First");
-
-        jTextField2.setFont(jTextField2.getFont());
-        jTextField2.setText("Last");
-        jTextField2.setToolTipText("");
-
-        jLabel1.setFont(jLabel1.getFont());
-        jLabel1.setText("Full Name");
-
-        javax.swing.GroupLayout frmNewCustomerLayout = new javax.swing.GroupLayout(frmNewCustomer.getContentPane());
-        frmNewCustomer.getContentPane().setLayout(frmNewCustomerLayout);
-        frmNewCustomerLayout.setHorizontalGroup(
-            frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frmNewCustomerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                .addGap(74, 74, 74))
-        );
-
-        frmNewCustomerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextField1, jTextField2});
-
-        frmNewCustomerLayout.setVerticalGroup(
-            frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frmNewCustomerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(frmNewCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(276, Short.MAX_VALUE))
-        );
+        jLabel2.setText("jLabel2");
 
         setBackground(new java.awt.Color(240, 240, 240));
         setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-
-        jDesktopPane1.setBackground(new java.awt.Color(100, 100, 100));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
-        jPanel1.setBounds(50, 50, 100, 100);
-        jDesktopPane1.add(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         barStatusBar.setPreferredSize(new java.awt.Dimension(595, 22));
 
@@ -187,45 +139,149 @@ public class Application extends JApplet {
         barStatusBar.setLayout(barStatusBarLayout);
         barStatusBarLayout.setHorizontalGroup(
             barStatusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblStatusBarText, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+            .addComponent(lblStatusBarText, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
         );
         barStatusBarLayout.setVerticalGroup(
             barStatusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblStatusBarText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
         );
 
-        frmItem.setVisible(true);
+        javax.swing.GroupLayout frmWelcomeLayout = new javax.swing.GroupLayout(frmWelcome);
+        frmWelcome.setLayout(frmWelcomeLayout);
+        frmWelcomeLayout.setHorizontalGroup(
+            frmWelcomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 563, Short.MAX_VALUE)
+        );
+        frmWelcomeLayout.setVerticalGroup(
+            frmWelcomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 293, Short.MAX_VALUE)
+        );
 
-        lblItemImage.setText("jLabel2");
+        jTabbedPane1.addTab("Welcome", frmWelcome);
 
-        jButton1.setText("jButton1");
+        jLabel1.setText("reminder: a listing of customers will go here");
+
+        tblCustomerList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "C ID", "First Name", "Last Name", "Address", "Phone Number"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblCustomerList);
+        tblCustomerList.getColumnModel().getColumn(0).setResizable(false);
+        tblCustomerList.getColumnModel().getColumn(0).setPreferredWidth(32);
+        tblCustomerList.getColumnModel().getColumn(1).setResizable(false);
+        tblCustomerList.getColumnModel().getColumn(1).setPreferredWidth(72);
+        tblCustomerList.getColumnModel().getColumn(2).setResizable(false);
+        tblCustomerList.getColumnModel().getColumn(2).setPreferredWidth(88);
+        tblCustomerList.getColumnModel().getColumn(3).setResizable(false);
+        tblCustomerList.getColumnModel().getColumn(3).setPreferredWidth(261);
+        tblCustomerList.getColumnModel().getColumn(4).setResizable(false);
+        tblCustomerList.getColumnModel().getColumn(4).setPreferredWidth(87);
+
+        btnLoadCustomers.setText("Load Customers");
+        btnLoadCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadCustomersActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("test");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout frmItemLayout = new javax.swing.GroupLayout(frmItem.getContentPane());
-        frmItem.getContentPane().setLayout(frmItemLayout);
+        javax.swing.GroupLayout frmCustomerLayout = new javax.swing.GroupLayout(frmCustomer);
+        frmCustomer.setLayout(frmCustomerLayout);
+        frmCustomerLayout.setHorizontalGroup(
+            frmCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, frmCustomerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(frmCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                    .addGroup(frmCustomerLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(55, 55, 55)
+                        .addComponent(btnLoadCustomers)))
+                .addContainerGap())
+        );
+        frmCustomerLayout.setVerticalGroup(
+            frmCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmCustomerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(frmCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnLoadCustomers)
+                    .addComponent(jButton1))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Customer", frmCustomer);
+
+        jLabel3.setText("reminder: a listing of products will go here. similar to the customer tab.");
+
+        javax.swing.GroupLayout frmItemLayout = new javax.swing.GroupLayout(frmItem);
+        frmItem.setLayout(frmItemLayout);
         frmItemLayout.setHorizontalGroup(
             frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(frmItemLayout.createSequentialGroup()
-                .addGroup(frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(frmItemLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblItemImage))
-                    .addComponent(jButton1))
-                .addContainerGap(371, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addContainerGap(215, Short.MAX_VALUE))
         );
         frmItemLayout.setVerticalGroup(
             frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(frmItemLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblItemImage)
-                .addGap(27, 27, 27)
-                .addComponent(jButton1)
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addComponent(jLabel3)
+                .addContainerGap(268, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.addTab("Products", frmItem);
+
+        jLabel4.setText("reminder: same thing here");
+
+        javax.swing.GroupLayout frmOrdersLayout = new javax.swing.GroupLayout(frmOrders);
+        frmOrders.setLayout(frmOrdersLayout);
+        frmOrdersLayout.setHorizontalGroup(
+            frmOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmOrdersLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addContainerGap(427, Short.MAX_VALUE))
+        );
+        frmOrdersLayout.setVerticalGroup(
+            frmOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frmOrdersLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addContainerGap(268, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Orders", frmOrders);
 
         mnuFile.setMnemonic('f');
         mnuFile.setText("File");
@@ -247,6 +303,11 @@ public class Application extends JApplet {
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 itmExitMouseExited(evt);
+            }
+        });
+        itmExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmExitActionPerformed(evt);
             }
         });
         mnuFile.add(itmExit);
@@ -285,25 +346,19 @@ public class Application extends JApplet {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
-            .addComponent(barStatusBar, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 59, Short.MAX_VALUE)
-                    .addComponent(frmItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 59, Short.MAX_VALUE)))
+            .addComponent(barStatusBar, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
-                .addGap(4, 4, 4)
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(barStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 42, Short.MAX_VALUE)
-                    .addComponent(frmItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 43, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
     //</editor-fold>
@@ -325,42 +380,73 @@ public class Application extends JApplet {
         clearStatusBarText();
     }//GEN-LAST:event_itmExitMouseExited
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            ImageIcon icon = new ImageIcon(ItemAccess.getItemImage(1, true));
+    private void itmNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNewCustomerActionPerformed
+        JInternalFrame frame = new JInternalFrame();
+        frame.setContentPane(new NewCustomerForm());
+        frame.setLocation(5, 5);
+        frame.setSize(frame.getContentPane().getSize());
+        frame.setVisible(true);
+    }//GEN-LAST:event_itmNewCustomerActionPerformed
 
-            lblItemImage.setIcon(icon);
+    private void itmExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_itmExitActionPerformed
+
+    private void btnLoadCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadCustomersActionPerformed
+        try {
+            Customer[] list = CustomerAccess.getCustomers();
+            
+            DefaultTableModel model = (DefaultTableModel) tblCustomerList.getModel();
+            for(Customer c : list){
+                ArrayList<Object> cust = new ArrayList<Object>();
+                cust.add(c.getCustomerId());
+                cust.add(c.getFirstName());
+                cust.add(c.getLastName());
+                cust.add(c.getAddress());
+                cust.add(Utils.formatPhoneNumber(c));
+                //add customers to table here
+                model.addRow(cust.toArray());
+            }
         } catch (SQLException ex) {
             Utils.log_error(ex.getMessage());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLoadCustomersActionPerformed
 
-    private void itmNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNewCustomerActionPerformed
-        //
-    }//GEN-LAST:event_itmNewCustomerActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFrame frame = new JFrame("Customer");
+        frame.setContentPane(new NewCustomerForm());
+        frame.setSize(frame.getContentPane().getPreferredSize());
+        frame.setResizable(false);
+        frame.pack();
+        frame.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Generated Code">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel barStatusBar;
-    private javax.swing.JInternalFrame frmItem;
-    private javax.swing.JInternalFrame frmNewCustomer;
+    private javax.swing.JButton btnLoadCustomers;
+    private javax.swing.JPanel frmCustomer;
+    private javax.swing.JPanel frmItem;
+    private javax.swing.JPanel frmOrders;
+    private javax.swing.JPanel frmWelcome;
     private javax.swing.JMenuItem itmDefault;
     private javax.swing.JMenuItem itmExit;
     private javax.swing.JMenuItem itmLucida;
     private javax.swing.JMenuItem itmNewCustomer;
     private javax.swing.JMenuItem itmSegoeUI;
     private javax.swing.JButton jButton1;
-    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JLabel lblItemImage;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblStatusBarText;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuFont;
     private javax.swing.JMenuBar mnuMainMenu;
     private javax.swing.JMenu mnuView;
+    private javax.swing.JTable tblCustomerList;
     // End of variables declaration//GEN-END:variables
     //</editor-fold>
 }
