@@ -64,7 +64,7 @@ public class Customer {
         Pattern pattern = Pattern.compile("^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$");
         Matcher matcher = pattern.matcher(phoneNumber);
         if (matcher.matches()) {
-            this.phoneNumber = phoneNumber;
+            this.phoneNumber = phoneNumber.replaceAll("[^\\d]", phoneNumber);
         } else {
             throw new IllegalArgumentException("Phone number was not valid.");
         }

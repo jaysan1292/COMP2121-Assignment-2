@@ -17,6 +17,13 @@ public class OrderLine {
     public OrderLine() {
     }
 
+    public OrderLine(Order order, Item item, int qty) {
+        this.order = order;
+        this.item = item;
+        this.quantity = qty;
+        this.total = item.getPrice() * qty;
+    }
+
     public Order getOrder() {
         return order;
     }
