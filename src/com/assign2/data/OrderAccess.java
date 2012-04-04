@@ -56,7 +56,9 @@ public class OrderAccess extends CommonAccess {
 
         sqlStatement.executeUpdate(query);
     }
-
+    public static Order findOrder(int orderId) throws SQLException{
+        return findOrder(ORDER_ID,String.valueOf(orderId));
+    }
     public static Order findOrder(String column, String value) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
