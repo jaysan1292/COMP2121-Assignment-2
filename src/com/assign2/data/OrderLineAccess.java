@@ -24,6 +24,10 @@ public class OrderLineAccess extends CommonAccess {
     public static final String QUANTITY = "quantity";
     public static final String TOTAL = "total";
 
+    public enum Mode {
+        ADD, SUBTRACT, REPLACE
+    }
+
     private OrderLineAccess() {
         super();
     }
@@ -57,6 +61,32 @@ public class OrderLineAccess extends CommonAccess {
         } while (resultSet.next());
 
         return orderLines.toArray(new OrderLine[1]);
+    }
+
+    public static OrderLine getOrderLine(Order order, Item item) throws SQLException {
+        return getOrderLine(order, item);
+    }
+
+    public static OrderLine getOrderLine(int orderId, int itemId) throws SQLException {
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("SELECT * FROM order_line WHERE order_id=%s AND item_id=%s", orderId, itemId);
+        Utils.log_debug("Executing SQL query: %s", query);
+        ResultSet resultSet = sqlStatement.executeQuery(query);
+
+        if (!(resultSet.first())) {
+            throw new SQLException("Result set returned no data.");
+        }
+        OrderLine ol = new OrderLine();
+        ol.setOrder(OrderAccess.findOrder(OrderAccess.ORDER_ID, resultSet.getString(ORDER_ID)));
+        ol.setItem(ItemAccess.findItem(ItemAccess.ITEM_ID, resultSet.getString(ITEM_ID)));
+        ol.setQuantity(resultSet.getInt(QUANTITY));
+        ol.setTotal(resultSet.getDouble(TOTAL));
+        Utils.log_debug("Order Line found: order_id:%s | item_id: %s | quantity: %s | total: %.2f",
+                        ol.getOrder().getOrderId(), ol.getItem().getItemId(), ol.getQuantity(), ol.getTotal());
+
+        return ol;
     }
 
     public static void addNewOrderLine(int orderId, int itemId, int quantity) throws SQLException {
@@ -96,12 +126,28 @@ public class OrderLineAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
-    public static void updateOrderLine(Order order, Item item, int newQuantity) throws SQLException {
-        updateOrderLine(order.getOrderId(), item.getItemId(), newQuantity);
+    public static void updateOrderLine(Order order, Item item, int newQuantity, Mode mode) throws SQLException {
+        updateOrderLine(order.getOrderId(), item.getItemId(), newQuantity, mode);
     }
 
-    public static void updateOrderLine(int orderId, int itemId, int newQuantity) throws SQLException {
-        deleteOrderLine(orderId, itemId);
-        addNewOrderLine(orderId, itemId, newQuantity);
+    public static void updateOrderLine(int orderId, int itemId, int newQuantity, Mode mode) throws SQLException {
+        switch (mode) {
+            case ADD:
+                int oldQuantity = getOrderLine(orderId, itemId).getQuantity();
+                updateOrderLine(orderId, itemId, oldQuantity+newQuantity, Mode.REPLACE);
+                break;
+            case SUBTRACT:
+                int oldQuantity = getOrderLine(orderId, itemId).getQuantity();
+                updateOrderLine(orderId, itemId, oldQuantity-newQuantity, Mode.REPLACE);
+                break;
+            case REPLACE:
+                deleteOrderLine(orderId, itemId);
+                addNewOrderLine(orderId, itemId, newQuantity);
+                break;
+        }
+    }
+
+    public static OrderLine[] getOrderLines(Order o) throws SQLException {
+        return findOrderLine(ORDER_ID, String.valueOf(o.getOrderId()));
     }
 }

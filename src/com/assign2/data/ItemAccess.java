@@ -4,15 +4,19 @@
  */
 package com.assign2.data;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import com.assign2.Utils;
 import com.assign2.business.Category;
 import com.assign2.business.Item;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,7 +33,7 @@ public class ItemAccess extends CommonAccess {
     public static final String NAME = "name";
     public static final String CATEGORY = "category";
     public static final String PRICE = "price";
-    public static final String DESCRIPTION = "price";
+    public static final String DESCRIPTION = "description";
     public static final String IMAGE = "image";
     public static final String QUANTITY_IN_STOCK = "quantity_in_stock";
 
@@ -58,9 +62,9 @@ public class ItemAccess extends CommonAccess {
         item.setName(resultSet.getString(NAME));
         item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, resultSet.getString(CATEGORY)));
         item.setPrice(resultSet.getDouble(PRICE));
-        item.setImage(getItemImage(item.getItemId(), false));
         item.setDescription(resultSet.getString(DESCRIPTION));
-        // TODO: retrieve image from database and set it in code
+        item.setImage(getItemImage(item.getItemId(), false));
+        item.setQtyInStock(resultSet.getInt(QUANTITY_IN_STOCK));
 
         return item;
     }
@@ -123,6 +127,7 @@ public class ItemAccess extends CommonAccess {
         Statement sqlStatement = conn.createStatement();
 
         String query = String.format("Select image from item WHERE item_id=%s", itemId);
+        Utils.log_debug("Executing SQL query: %s", query);
         ResultSet result = sqlStatement.executeQuery(query);
 
         String imgData = "";
@@ -162,26 +167,80 @@ public class ItemAccess extends CommonAccess {
         }
         return null;
     }
-    
-    public static Item[] getItems()throws SQLException{
+
+    public void saveItemImage(Item i, String filename) throws SQLException, FileNotFoundException {
+        Connection conn = dbConnect();
+        File image = new File(filename);
+
+        PreparedStatement sqlStatement = conn.prepareStatement("UPDATE item SET image=? WHERE item_id=" + i.getItemId());
+        FileInputStream input = new FileInputStream(image);
+        sqlStatement.setBinaryStream(1, input);
+        int result = sqlStatement.executeUpdate();
+        if (result > 0) {
+            Utils.log_info("Uploaded image successfully!");
+        } else {
+            Utils.log_error("Image failed to upload :c");
+            throw new SQLException("Image failed to upload :c");
+        }
+
+    }
+
+    public static Item[] getItems() throws SQLException {
+        return getItems(true);
+    }
+
+    public static Item[] getItems(boolean getImages) throws SQLException {
         ArrayList<Item> itemList = new ArrayList<Item>();
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
-        
+
         String query = "SELECT item_id, name, category, price, description, quantity_in_stock FROM item;";
+        Utils.log_debug("Executing SQL query: %s", query);
         ResultSet results = sqlStatement.executeQuery(query);
-        
-        while(results.next()){
+
+        while (results.next()) {
             Item item = new Item();
             item.setItemId(results.getInt(ITEM_ID));
             item.setName(results.getString(NAME));
             item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, results.getString(CATEGORY)));
             item.setPrice(results.getDouble(PRICE));
             item.setDescription(results.getString(DESCRIPTION));
-            item.setImage(getItemImage(item.getItemId(), false));
+            if (getImages) {
+                item.setImage(getItemImage(item.getItemId(), false));
+            }
             item.setQtyInStock(results.getInt(QUANTITY_IN_STOCK));
             itemList.add(item);
-            Utils.log_debug("Retriving information for item %s.",item.getItemId());
+            Utils.log_debug("Retriving information for item %s.", item.getItemId());
+        }
+        return itemList.toArray(new Item[1]);
+    }
+
+    public static Item[] getItems(int lowerBound, int upperBound) throws SQLException {
+        return getItems(lowerBound, upperBound, true);
+    }
+
+    public static Item[] getItems(int lowerBound, int upperBound, boolean getImages) throws SQLException {
+        ArrayList<Item> itemList = new ArrayList<Item>();
+        Connection conn = dbConnect();
+        Statement sqlStatement = conn.createStatement();
+
+        String query = String.format("SELECT item_id, name, category, price, description, quantity_in_stock FROM item LIMIT %d, %d;", lowerBound, upperBound);
+        Utils.log_debug("Executing SQL query: %s", query);
+        ResultSet results = sqlStatement.executeQuery(query);
+
+        while (results.next()) {
+            Item item = new Item();
+            item.setItemId(results.getInt(ITEM_ID));
+            item.setName(results.getString(NAME));
+            item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, results.getString(CATEGORY)));
+            item.setPrice(results.getDouble(PRICE));
+            item.setDescription(results.getString(DESCRIPTION));
+            if (getImages) {
+                item.setImage(getItemImage(item.getItemId(), false));
+            }
+            item.setQtyInStock(results.getInt(QUANTITY_IN_STOCK));
+            itemList.add(item);
+            Utils.log_debug("Retriving information for item %s.", item.getItemId());
         }
         return itemList.toArray(new Item[1]);
     }
