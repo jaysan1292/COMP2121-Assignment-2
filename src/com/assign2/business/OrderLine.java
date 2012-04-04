@@ -80,4 +80,8 @@ public class OrderLine {
         this.total = total;
         return this;
     }
+
+    public boolean equals(OrderLine otherLine) {
+        return (this.order.getOrderId() == otherLine.order.getOrderId()) && (this.getItem().getItemId() == otherLine.getItem().getItemId());
+    }
 }

@@ -23,30 +23,53 @@ public class OrderHandler {
     public void processNewOrder() {
     }
 
-    public void addItemsToOrder(Order order, int itemId, int qty) throws SQLException {
-        addItemsToOrder(order, ItemAccess.findItem(ItemAccess.ITEM_ID, String.valueOf(itemId)), qty);
+    public void addItemsToOrder(int orderId, int itemId, int qty) throws SQLException {
+        addItemsToOrder(OrderAccess.findOrder(OrderAccess.ORDER_ID, String.valueOf(orderId)),
+                        ItemAccess.findItem(ItemAccess.ITEM_ID, String.valueOf(itemId)), qty);
     }
 
     public void addItemsToOrder(Order order, Item item, int qty) {
-        // checkIfOrderLineExists(order, item, qty)
-        // check database for current order and item
-        // if SQLException is thrown in function, return false
-        // if query executes without error, return true
-        // it's 12:31AM, no time to implement >:
+        try {
+            OrderLine newLine = new OrderLine(order, item, qty);
+            OrderLine[] customerLines = OrderLineAccess.getOrderLines(order);
+            boolean lineExists = false;
+            for (OrderLine line : customerLines) {
+                if (line.equals(newLine)) {
+                    lineExists = true;
+                }
+            }
+
+            if (lineExists) {
+                OrderLineAccess.updateOrderLine(order, item, qty);
+            }
+            // checkIfOrderLineExists(order, item, qty)
+            // check database for current order and item
+            // if SQLException is thrown in function, return false
+            // if query executes without error, return true
+            // it's 12:31AM, no time to implement >:
+        } catch (SQLException ex) {
+            Utils.log_error(ex.getMessage());
+        }
     }
-    
-//    private boolean orderLineExists(Order order, Item item, int qty){
-//        try {
-//            OrderLine line = OrderLineAccess.findOrderLine(OrderAccess.ORDER_ID, String.valueOf(order.getOrderId()));
-//            
-//        } catch (Exception ex) {
-//            if (ex.getClass() == SQLException.class) {
-//                Utils.log_error(ex.getMessage());
-//            } else if (ex.getClass() == IllegalArgumentException.class) {
-//                Utils.log_error(ex.getMessage());
-//            } else {
-//                ex.printStackTrace();
-//            }
-//        }
-//    }
+
+    private boolean orderLineExists(Order order, Item item, int qty) {
+        try {
+            OrderLine[] line = OrderLineAccess.findOrderLine(OrderLineAccess.ORDER_ID, String.valueOf(order.getOrderId()));
+            OrderLine theOrderLine = new OrderLine(order, item, qty);
+            for (OrderLine ol : line) {
+                if (ol.equals(theOrderLine)) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            if (ex.getClass() == SQLException.class) {
+                Utils.log_error(ex.getMessage());
+            } else if (ex.getClass() == IllegalArgumentException.class) {
+                Utils.log_error(ex.getMessage());
+            } else {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
 }
