@@ -90,7 +90,8 @@ public class OrderLineAccess extends CommonAccess {
     }
 
     public static void addNewOrderLine(int orderId, int itemId, int quantity) throws SQLException {
-        double price = ItemAccess.findItem(ItemAccess.ITEM_ID, String.valueOf(quantity)).getPrice();
+        double price = ItemAccess.findItem(itemId).getPrice() * quantity;
+        Utils.log_debug("%.2f", price);
         addNewOrderLine(orderId, itemId, quantity, price);
     }
 
@@ -131,14 +132,15 @@ public class OrderLineAccess extends CommonAccess {
     }
 
     public static void updateOrderLine(int orderId, int itemId, int newQuantity, Mode mode) throws SQLException {
+        int oldQuantity;
         switch (mode) {
             case ADD:
-                int oldQuantity = getOrderLine(orderId, itemId).getQuantity();
-                updateOrderLine(orderId, itemId, oldQuantity+newQuantity, Mode.REPLACE);
+                oldQuantity = getOrderLine(orderId, itemId).getQuantity();
+                updateOrderLine(orderId, itemId, oldQuantity + newQuantity, Mode.REPLACE);
                 break;
             case SUBTRACT:
-                int oldQuantity = getOrderLine(orderId, itemId).getQuantity();
-                updateOrderLine(orderId, itemId, oldQuantity-newQuantity, Mode.REPLACE);
+                oldQuantity = getOrderLine(orderId, itemId).getQuantity();
+                updateOrderLine(orderId, itemId, oldQuantity - newQuantity, Mode.REPLACE);
                 break;
             case REPLACE:
                 deleteOrderLine(orderId, itemId);
