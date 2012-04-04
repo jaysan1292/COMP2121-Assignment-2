@@ -50,7 +50,6 @@ public class OrderForm extends javax.swing.JPanel {
 
         lblOrderIdLabel = new javax.swing.JLabel();
         lblCustomerLabel = new javax.swing.JLabel();
-        lblCustomer = new javax.swing.JLabel();
         lblOrderId = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOrderLines = new javax.swing.JTable();
@@ -60,12 +59,11 @@ public class OrderForm extends javax.swing.JPanel {
         btnCancel = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox();
 
         lblOrderIdLabel.setText("Order ID:");
 
         lblCustomerLabel.setText("Customer:");
-
-        lblCustomer.setText("CustomerName");
 
         lblOrderId.setText("OrderID");
 
@@ -132,9 +130,9 @@ public class OrderForm extends javax.swing.JPanel {
                         .addComponent(lblOrderId)
                         .addGap(31, 31, 31)
                         .addComponent(lblCustomerLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblCustomer)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)))
@@ -147,10 +145,10 @@ public class OrderForm extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOrderIdLabel)
                     .addComponent(lblCustomerLabel)
-                    .addComponent(lblCustomer)
                     .addComponent(lblOrderId)
                     .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -167,8 +165,8 @@ public class OrderForm extends javax.swing.JPanel {
     private javax.swing.JButton btnSave;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblCustomer;
     private javax.swing.JLabel lblCustomerLabel;
     private javax.swing.JLabel lblOrderId;
     private javax.swing.JLabel lblOrderIdLabel;

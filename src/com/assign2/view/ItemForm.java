@@ -13,22 +13,24 @@ package com.assign2.view;
 import com.assign2.Utils;
 import com.assign2.business.Item;
 import com.assign2.data.ItemAccess;
+import java.io.File;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 /**
  *
  * @author Jason Recillo
  */
 public class ItemForm extends javax.swing.JPanel {
+    private File image;
+
     /** Creates new form ItemForm */
     public ItemForm() {
         initComponents();
     }
-    
-    public ItemForm(Item i){
+
+    public ItemForm(Item i) {
         try {
             initComponents();
             lblItemId.setText(String.valueOf(i.getItemId()));
@@ -41,7 +43,7 @@ public class ItemForm extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Utils.log_error(ex.getMessage());
         }
-        
+
     }
 
     /** This method is called from within the constructor to
@@ -67,8 +69,11 @@ public class ItemForm extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescription = new javax.swing.JTextArea();
         spnQuantityInStock = new javax.swing.JSpinner();
-        jPanel1 = new javax.swing.JPanel();
+        lblChangeImageLabel = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnChooseImage = new javax.swing.JButton();
+        lblImagePath = new javax.swing.JLabel();
 
         lblItemIdLabel.setText("Item ID:");
 
@@ -90,8 +95,6 @@ public class ItemForm extends javax.swing.JPanel {
 
         txtName.setText("Item Name");
 
-        cboCategories.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         txtPrice.setText("Price");
 
         txtDescription.setColumns(20);
@@ -101,18 +104,29 @@ public class ItemForm extends javax.swing.JPanel {
         txtDescription.setWrapStyleWord(true);
         jScrollPane1.setViewportView(txtDescription);
 
+        lblChangeImageLabel.setText("Image:");
+
         btnSave.setText("Save");
-        jPanel1.add(btnSave);
+
+        btnCancel.setText("Cancel");
+
+        btnChooseImage.setText("Choose File...");
+        btnChooseImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChooseImageActionPerformed(evt);
+            }
+        });
+
+        lblImagePath.setText("placeholder");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(imgItemImage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,16 +135,25 @@ public class ItemForm extends javax.swing.JPanel {
                             .addComponent(lblCategoryLabel)
                             .addComponent(lblPriceLabel)
                             .addComponent(lblDescriptionLabel)
-                            .addComponent(lblQuantityLabel))
+                            .addComponent(lblQuantityLabel)
+                            .addComponent(lblChangeImageLabel))
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblItemId)
-                            .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                            .addComponent(spnQuantityInStock, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cboCategories, javax.swing.GroupLayout.Alignment.LEADING, 0, 84, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(spnQuantityInStock, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(cboCategories, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnChooseImage)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblImagePath, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancel)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -157,25 +180,46 @@ public class ItemForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblDescriptionLabel)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spnQuantityInStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblQuantityLabel)))
                     .addComponent(imgItemImage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spnQuantityInStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblQuantityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblChangeImageLabel)
+                    .addComponent(btnChooseImage)
+                    .addComponent(lblImagePath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancel)
+                    .addComponent(btnSave))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnChooseImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseImageActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            image = fc.getSelectedFile();
+            String path = image.getAbsolutePath();
+            lblImagePath.setText(String.format("%s...%s", path.substring(0, 9), path.substring(path.length() - 10, path.length() - 1)));
+        }
+    }//GEN-LAST:event_btnChooseImageActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnChooseImage;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cboCategories;
     private javax.swing.JLabel imgItemImage;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCategoryLabel;
+    private javax.swing.JLabel lblChangeImageLabel;
     private javax.swing.JLabel lblDescriptionLabel;
+    private javax.swing.JLabel lblImagePath;
     private javax.swing.JLabel lblItemId;
     private javax.swing.JLabel lblItemIdLabel;
     private javax.swing.JLabel lblNameLabel;
