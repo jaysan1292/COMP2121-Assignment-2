@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import com.assign2.Utils;
 import com.assign2.business.Category;
 import com.assign2.business.Item;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,7 +27,7 @@ import static org.imgscalr.Scalr.*;
  *
  * @author Jason Recillo
  */
-public class ItemAccess extends CommonAccess {
+public class ItemAccess extends AccessCommon {
     public static final String ITEM_ID = "item_id";
     public static final String NAME = "name";
     public static final String CATEGORY = "category";
@@ -63,34 +62,58 @@ public class ItemAccess extends CommonAccess {
         item.setCategory(CategoryAccess.findCategory(CategoryAccess.CATEGORY_ID, resultSet.getString(CATEGORY)));
         item.setPrice(resultSet.getDouble(PRICE));
         item.setDescription(resultSet.getString(DESCRIPTION));
-        item.setImage(getItemImage(item.getItemId(), false));
+        try {
+            item.setImage(getItemImage(item.getItemId(), false));
+        } catch (SQLException sQLException) {
+            item.setImage(null);
+        }
         item.setQtyInStock(resultSet.getInt(QUANTITY_IN_STOCK));
 
         return item;
     }
 
-    public void addNewItem(Item item) throws SQLException {
-        addNewItem(item.getItemId(), item.getName(), item.getCategory(), item.getPrice(), item.getDescription(), item.getQtyInStock());
+    public static void addNewItem(Item item) throws SQLException, FileNotFoundException {
+        addNewItem(item.getName(), item.getCategory(), item.getPrice(), item.getDescription(), item.getQtyInStock(), item.getImage());
     }
 
-    public void addNewItem(int itemId, String name, Category category, double price, String description, int qtyInStock) throws SQLException {
+    public static void addNewItem(String name, Category category, double price, String description, int qtyInStock, String image) throws SQLException, FileNotFoundException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
         String query = "INSERT INTO item ";
-        query += "(item_id, name, category, price, description, image, quantity_in_stock) ";
-        query += String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s')",
-                               itemId, name, category.getCategoryId(), price, description, qtyInStock);
-        Utils.log_debug("Executing SQL query: %s", query);
+        query += "(item_id, name, category, price, description, quantity_in_stock) ";
+        query += String.format("VALUES(NULL, '%s', %s, %s, '%s', %s);",
+                               name, category.getCategoryId(), price, description, qtyInStock);
 
+        Utils.log_debug("Executing SQL query: %s", query);
         sqlStatement.executeUpdate(query);
+
+        // Save image
+        if ("".equals(image)) {
+            return;
+        }
+
+        // get the item id of the newly inserted row
+        query = String.format("SELECT * FROM item WHERE name='%s' AND price=%s AND quantity_in_stock=%s AND category=%s",
+                              name, price, qtyInStock, category.getCategoryId());
+
+        Utils.log_debug("Executing SQL query: %s", query);
+        ResultSet newItemId = sqlStatement.executeQuery(query);
+
+        if (!newItemId.first()) {
+            throw new SQLException("Failed to upload image :c");
+        }
+
+        int itemId = newItemId.getInt(ITEM_ID);
+
+        saveItemImage(itemId, image);
     }
 
-    public void deleteItem(Item item) throws SQLException {
+    public static void deleteItem(Item item) throws SQLException {
         deleteItem(item.getItemId());
     }
 
-    public void deleteItem(int itemId) throws SQLException {
+    public static void deleteItem(int itemId) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -100,11 +123,11 @@ public class ItemAccess extends CommonAccess {
         sqlStatement.executeUpdate(query);
     }
 
-    public void updateItem(Item item, String column, String newValue) throws SQLException {
+    public static void updateItem(Item item, String column, String newValue) throws SQLException {
         updateItem(item.getItemId(), column, newValue);
     }
 
-    public void updateItem(int itemId, String column, String newValue) throws SQLException {
+    public static void updateItem(int itemId, String column, String newValue) throws SQLException {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
@@ -168,13 +191,31 @@ public class ItemAccess extends CommonAccess {
         return null;
     }
 
-    public void saveItemImage(Item i, String filename) throws SQLException, FileNotFoundException {
+    public static void saveItem(Item i) {
+        try {
+            updateItem(i, NAME, i.getName());
+            updateItem(i, CATEGORY, String.valueOf(i.getCategory()));
+            updateItem(i, PRICE, String.valueOf(i.getPrice()));
+            updateItem(i, DESCRIPTION, String.valueOf(i.getDescription()));
+            updateItem(i, QUANTITY_IN_STOCK, String.valueOf(i.getQtyInStock()));
+        } catch (SQLException ex) {
+            Utils.log_error("Error updating item.");
+        }
+    }
+
+    public static void saveItemImage(Item i, String filename) throws SQLException, FileNotFoundException {
+        saveItemImage(i.getItemId(), filename);
+    }
+
+    public static void saveItemImage(int itemId, String filename) throws SQLException, FileNotFoundException {
         Connection conn = dbConnect();
         File image = new File(filename);
 
-        PreparedStatement sqlStatement = conn.prepareStatement("UPDATE item SET image=? WHERE item_id=" + i.getItemId());
+        String query = "UPDATE item SET image=? WHERE item_id=" + itemId;
+        PreparedStatement sqlStatement = conn.prepareStatement(query);
         FileInputStream input = new FileInputStream(image);
         sqlStatement.setBinaryStream(1, input);
+        Utils.log_debug("Executing SQL query: %s", query);
         int result = sqlStatement.executeUpdate();
         if (result > 0) {
             Utils.log_info("Uploaded image successfully!");
@@ -182,7 +223,6 @@ public class ItemAccess extends CommonAccess {
             Utils.log_error("Image failed to upload :c");
             throw new SQLException("Image failed to upload :c");
         }
-
     }
 
     public static Item[] getItems() throws SQLException {
@@ -206,7 +246,11 @@ public class ItemAccess extends CommonAccess {
             item.setPrice(results.getDouble(PRICE));
             item.setDescription(results.getString(DESCRIPTION));
             if (getImages) {
-                item.setImage(getItemImage(item.getItemId(), false));
+                try {
+                    item.setImage(getItemImage(item.getItemId(), false));
+                } catch (SQLException sQLException) {
+                    item.setImage(null);
+                }
             }
             item.setQtyInStock(results.getInt(QUANTITY_IN_STOCK));
             itemList.add(item);
@@ -236,7 +280,11 @@ public class ItemAccess extends CommonAccess {
             item.setPrice(results.getDouble(PRICE));
             item.setDescription(results.getString(DESCRIPTION));
             if (getImages) {
-                item.setImage(getItemImage(item.getItemId(), false));
+                try {
+                    item.setImage(getItemImage(item.getItemId(), false));
+                } catch (SQLException sQLException) {
+                    item.setImage(null);
+                }
             }
             item.setQtyInStock(results.getInt(QUANTITY_IN_STOCK));
             itemList.add(item);

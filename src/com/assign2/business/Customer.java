@@ -19,6 +19,10 @@ public class Customer {
 
     public Customer() {
     }
+    
+    public String getFullName(){
+        return String.format("%s %s", firstName,lastName);
+    }
 
     public int getCustomerId() {
         return customerId;
@@ -73,6 +77,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format("Customer #%d: %s %s", customerId, firstName, lastName);
+        return String.format("%d: %s %s", customerId, firstName, lastName);
     }
 }

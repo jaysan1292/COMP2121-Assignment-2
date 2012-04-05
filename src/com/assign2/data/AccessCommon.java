@@ -1,4 +1,3 @@
-//TODO: Data validation for all data access classes
 package com.assign2.data;
 
 import com.assign2.Utils;
@@ -11,10 +10,10 @@ import java.util.Observable;
  *
  * @author Jason Recillo
  */
-public abstract class CommonAccess {
+public abstract class AccessCommon {
     static Connection connection = null;
 
-    public CommonAccess() {
+    public AccessCommon() {
     }
 
     private static void _dbConnect() {
@@ -27,7 +26,6 @@ public abstract class CommonAccess {
             connection = conn;
         } catch (SQLException ex) {
                 Utils.log_error("Could not connect to database.");
-                System.exit(1);
         }
     }
 

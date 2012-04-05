@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Jason Recillo
  */
-public class CategoryAccess extends CommonAccess {
+public class CategoryAccess extends AccessCommon {
     public static final String CATEGORY_ID = "category_id";
     public static final String CATEGORY_NAME = "category_name";
     public static final String PARENT_CATEGORY_ID = "parent_category_id";
@@ -96,14 +96,19 @@ public class CategoryAccess extends CommonAccess {
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
 
-        String query = "SELECT * FROM category;";
+        String query = "SELECT * FROM category";
+        Utils.log_debug("Executing SQL query: %s", query);
         ResultSet results = sqlStatement.executeQuery(query);
 
         while (results.next()) {
             Category category = new Category();
             category.setCategoryId(results.getInt(CATEGORY_ID));
             category.setCategoryName(results.getString(CATEGORY_NAME));
-            category.setParentCategory(findCategory(CATEGORY_ID, results.getString(PARENT_CATEGORY_ID)));
+            try {
+                category.setParentCategory(findCategory(CATEGORY_ID, results.getString(PARENT_CATEGORY_ID)));
+            } catch (SQLException ex) {
+                category.setParentCategory(null);
+            }
             categoryList.add(category);
             Utils.log_debug("Retriving information for %s.", category.getCategoryName());
         }

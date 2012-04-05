@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Jason Recillo
  */
-public class CustomerAccess extends CommonAccess {
+public class CustomerAccess extends AccessCommon {
     public static final String CUSTOMER_ID = "customer_id";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
@@ -21,6 +21,10 @@ public class CustomerAccess extends CommonAccess {
 
     private CustomerAccess() {
         super();
+    }
+
+    public static Customer findCustomer(int customerId) throws SQLException {
+        return findCustomer(CUSTOMER_ID, String.valueOf(customerId));
     }
 
     /**
@@ -98,16 +102,16 @@ public class CustomerAccess extends CommonAccess {
 
         sqlStatement.executeUpdate(query);
     }
-    
-    public static Customer[] getCustomers() throws SQLException{
+
+    public static Customer[] getCustomers() throws SQLException {
         ArrayList<Customer> customerList = new ArrayList<Customer>();
         Connection conn = dbConnect();
         Statement sqlStatement = conn.createStatement();
-        
+
         String query = "SELECT * FROM customer;";
         ResultSet results = sqlStatement.executeQuery(query);
-        
-        while(results.next()){
+
+        while (results.next()) {
             Customer customer = new Customer();
             customer.setCustomerId(results.getInt(CUSTOMER_ID));
             customer.setFirstName(results.getString(FIRST_NAME));
@@ -115,7 +119,7 @@ public class CustomerAccess extends CommonAccess {
             customer.setAddress(results.getString(ADDRESS));
             customer.setPhoneNumber(results.getString(PHONE_NUMBER));
             customerList.add(customer);
-            Utils.log_debug("Retriving information for customer %s.",customer.getCustomerId());
+            Utils.log_debug("Retriving information for customer %s.", customer.getCustomerId());
         }
         return customerList.toArray(new Customer[1]);
     }

@@ -18,19 +18,73 @@ import com.assign2.business.Order;
 import com.assign2.data.ItemAccess;
 import com.assign2.data.OrderAccess;
 import com.assign2.data.OrderLineAccess;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.regex.PatternSyntaxException;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author Jason Recillo
  */
 public class Application extends JApplet {
+    private TableRowSorter<DefaultTableModel> customerSorter;
+    private TableRowSorter<DefaultTableModel> itemSorter;
+
+    private enum FormType {
+        Customer, Order, Product
+    }
+
+    class PopupListener extends MouseAdapter {
+        FormType type;
+
+        public PopupListener(FormType type) {
+            this.type = type;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            showContextMenu(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            showContextMenu(e);
+        }
+
+        private void showContextMenu(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                switch (type) {
+                    case Customer:
+                        mnuCustomerContextMenu.show(tblCustomerList, e.getX(), e.getY());
+                        break;
+                    case Order:
+                        mnuOrderContextMenu.show(tblOrderList, e.getX(), e.getY());
+                        break;
+                    case Product:
+                        mnuProductContextMenu.show(tblItemList, e.getX(), e.getY());
+                        break;
+                }
+            }
+        }
+    }
+
     /**
      * This applet can be run as an application!
      * If run in a browser, the main method will be ignored,
@@ -75,11 +129,62 @@ public class Application extends JApplet {
         //<editor-fold defaultstate="collapsed" desc="Create and display the applet">
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
+                @Override
                 public void run() {
                     initComponents();
                     clearStatusBarText();
+                    MouseListener customerPopupListener = new PopupListener(FormType.Customer);
+                    tblCustomerList.addMouseListener(customerPopupListener);
+
+                    MouseListener orderPopupListener = new PopupListener(FormType.Order);
+                    tblOrderList.addMouseListener(orderPopupListener);
+
+                    MouseListener itemPopupListener = new PopupListener(FormType.Product);
+                    tblItemList.addMouseListener(itemPopupListener);
+
+                    txtCustomerSearch.getDocument().addDocumentListener(new DocumentListener() {
+                        @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            doCustomerSearch();
+                        }
+
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            doCustomerSearch();
+                        }
+
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            doCustomerSearch();
+                        }
+                    });
+
+                    txtItemSearch.getDocument().addDocumentListener(new DocumentListener() {
+                        @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            doItemSearch();
+                        }
+
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            doItemSearch();
+                        }
+
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            doItemSearch();
+                        }
+                    });
                 }
             });
+
+            DefaultTableModel customerTableModel = (DefaultTableModel) tblCustomerList.getModel();
+            customerSorter = new TableRowSorter<DefaultTableModel>(customerTableModel);
+            tblCustomerList.setRowSorter(customerSorter);
+
+            DefaultTableModel itemTableModel = (DefaultTableModel) tblItemList.getModel();
+            itemSorter = new TableRowSorter<DefaultTableModel>(itemTableModel);
+            tblItemList.setRowSorter(itemSorter);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -105,6 +210,60 @@ public class Application extends JApplet {
         }
     }
 
+    private void openChildForm(JFrame frame, JPanel form) throws HeadlessException {
+        frame.setContentPane(form);
+        frame.setSize(frame.getContentPane().getPreferredSize());
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(this);
+        frame.setAlwaysOnTop(true);
+        frame.setVisible(true);
+    }
+
+    private void doCustomerSearch() {
+        if (!("Search...".equals(txtCustomerSearch.getText()))) {
+            RowFilter<DefaultTableModel, Object> filter = null;
+            try {
+                filter = RowFilter.regexFilter("(?i)" + txtCustomerSearch.getText(), 0, 1, 2, 3, 4);
+            } catch (PatternSyntaxException e) {
+                return;
+            }
+            customerSorter.setRowFilter(filter);
+        }
+    }
+
+    private void doItemSearch() {
+        if (!("Search...".equals(txtItemSearch.getText()))) {
+            RowFilter<DefaultTableModel, Object> filter = null;
+            try {
+                filter = RowFilter.regexFilter("(?i)" + txtItemSearch.getText(), 0, 1, 2, 3, 4);
+            } catch (PatternSyntaxException e) {
+                return;
+            }
+            itemSorter.setRowFilter(filter);
+        }
+    }
+
+    public void refreshCustomerTable() {
+        btnLoadCustomers.doClick();
+    }
+
+    public void refreshItemTable() {
+        btnLoadItems.doClick();
+    }
+
+    public void refreshOrderTable() {
+        btnLoadOrders.doClick();
+    }
+
+    private void setFonts(Font font) {
+        lblJasonLabel.setFont(font);
+        lblJohnLabel.setFont(font);
+        lblPeterLabel.setFont(font);
+        lblCourseLabel.setFont(font);
+        lblProfessorLabel.setFont(font);
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Generated Code">
     /** This method is called from within the init() method to
      * initialize the form.
@@ -115,20 +274,25 @@ public class Application extends JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
+        mnuCustomerContextMenu = new javax.swing.JPopupMenu();
+        itmEditCustomer = new javax.swing.JMenuItem();
+        mnuProductContextMenu = new javax.swing.JPopupMenu();
+        itmEditProduct = new javax.swing.JMenuItem();
+        mnuOrderContextMenu = new javax.swing.JPopupMenu();
+        itmEditOrder = new javax.swing.JMenuItem();
         barStatusBar = new javax.swing.JPanel();
         lblStatusBarText = new javax.swing.JLabel();
         prgProgressBar = new javax.swing.JProgressBar();
         tabTabbedPane = new javax.swing.JTabbedPane();
         frmWelcome = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblLogoLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        lblJasonLabel = new javax.swing.JLabel();
+        lblPeterLabel = new javax.swing.JLabel();
+        lblCourseLabel = new javax.swing.JLabel();
+        lblJohnLabel = new javax.swing.JLabel();
+        lblProfessorLabel = new javax.swing.JLabel();
         frmCustomer = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomerList = new javax.swing.JTable();
@@ -136,13 +300,15 @@ public class Application extends JApplet {
         btnAddNewCustomer = new javax.swing.JButton();
         lblCustomerSearchLabel = new javax.swing.JLabel();
         txtCustomerSearch = new javax.swing.JTextField();
+        btnDeleteCustomer = new javax.swing.JButton();
         frmItem = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblItemList = new javax.swing.JTable();
         btnLoadItems = new javax.swing.JButton();
         btnAddNewItem = new javax.swing.JButton();
-        txtItemSearchLabel = new javax.swing.JTextField();
+        txtItemSearch = new javax.swing.JTextField();
         lblItemSearchLabel = new javax.swing.JLabel();
+        btnDeleteItem = new javax.swing.JButton();
         frmOrders = new javax.swing.JPanel();
         btnLoadOrders = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -150,18 +316,46 @@ public class Application extends JApplet {
         btnAddNewOrder = new javax.swing.JButton();
         mnuMainMenu = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
-        itmNewCustomer = new javax.swing.JMenuItem();
         itmExit = new javax.swing.JMenuItem();
         mnuView = new javax.swing.JMenu();
         mnuFont = new javax.swing.JMenu();
         itmDefault = new javax.swing.JMenuItem();
         itmSegoeUI = new javax.swing.JMenuItem();
         itmLucida = new javax.swing.JMenuItem();
+        mnuColor = new javax.swing.JMenu();
+        itmDefaultColor = new javax.swing.JMenuItem();
+        itmBlueColor = new javax.swing.JMenuItem();
+        itemOrangeColor = new javax.swing.JMenuItem();
 
-        jLabel2.setText("jLabel2");
+        itmEditCustomer.setMnemonic('c');
+        itmEditCustomer.setText("Edit customer...");
+        itmEditCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmEditCustomerActionPerformed(evt);
+            }
+        });
+        mnuCustomerContextMenu.add(itmEditCustomer);
+
+        itmEditProduct.setMnemonic('p');
+        itmEditProduct.setText("Edit product...");
+        itmEditProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmEditProductActionPerformed(evt);
+            }
+        });
+        mnuProductContextMenu.add(itmEditProduct);
+
+        itmEditOrder.setMnemonic('o');
+        itmEditOrder.setText("Edit order...");
+        itmEditOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmEditOrderActionPerformed(evt);
+            }
+        });
+        mnuOrderContextMenu.add(itmEditOrder);
 
         setBackground(new java.awt.Color(240, 240, 240));
-        setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        setFont(new java.awt.Font("Segoe UI", 0, 12));
 
         barStatusBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         barStatusBar.setMaximumSize(new java.awt.Dimension(32767, 22));
@@ -195,27 +389,27 @@ public class Application extends JApplet {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/assign2/view/logo.png"))); // NOI18N
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
+        lblLogoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblLogoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/assign2/view/logo.png"))); // NOI18N
+        lblLogoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel1.add(lblLogoLabel, java.awt.BorderLayout.CENTER);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Jason Recillo - 100726948");
+        lblJasonLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblJasonLabel.setText("Jason Recillo - 100726948");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Peter Le - 100714258");
+        lblPeterLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        lblPeterLabel.setText("Peter Le - 100714258");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("COMP 2121 - Internet Application Development");
+        lblCourseLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        lblCourseLabel.setText("COMP 2121 - Internet Application Development");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel6.setText("John Jess Migia - 100713187");
+        lblJohnLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        lblJohnLabel.setText("John Jess Migia - 100713187");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Submitted to: Anjana Shah");
+        lblProfessorLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+        lblProfessorLabel.setText("Submitted to: Anjana Shah");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -224,26 +418,26 @@ public class Application extends JApplet {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7))
+                    .addComponent(lblJasonLabel)
+                    .addComponent(lblPeterLabel)
+                    .addComponent(lblJohnLabel)
+                    .addComponent(lblCourseLabel)
+                    .addComponent(lblProfessorLabel))
                 .addContainerGap(388, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(lblJasonLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(lblPeterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addComponent(lblJohnLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
+                .addComponent(lblCourseLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
+                .addComponent(lblProfessorLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -291,6 +485,11 @@ public class Application extends JApplet {
                 return canEdit [columnIndex];
             }
         });
+        tblCustomerList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblCustomerListMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCustomerList);
         tblCustomerList.getColumnModel().getColumn(0).setResizable(false);
         tblCustomerList.getColumnModel().getColumn(0).setPreferredWidth(32);
@@ -320,6 +519,22 @@ public class Application extends JApplet {
         lblCustomerSearchLabel.setText("Search:");
 
         txtCustomerSearch.setText("Search...");
+        txtCustomerSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCustomerSearchFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCustomerSearchFocusLost(evt);
+            }
+        });
+
+        btnDeleteCustomer.setText("Delete Customer");
+        btnDeleteCustomer.setEnabled(false);
+        btnDeleteCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteCustomerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout frmCustomerLayout = new javax.swing.GroupLayout(frmCustomer);
         frmCustomer.setLayout(frmCustomerLayout);
@@ -333,10 +548,12 @@ public class Application extends JApplet {
                         .addComponent(btnLoadCustomers)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAddNewCustomer)
-                        .addGap(134, 134, 134)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeleteCustomer)
+                        .addGap(55, 55, 55)
                         .addComponent(lblCustomerSearchLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCustomerSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)))
+                        .addComponent(txtCustomerSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         frmCustomerLayout.setVerticalGroup(
@@ -347,7 +564,8 @@ public class Application extends JApplet {
                     .addComponent(btnLoadCustomers)
                     .addComponent(btnAddNewCustomer)
                     .addComponent(lblCustomerSearchLabel)
-                    .addComponent(txtCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteCustomer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
@@ -376,6 +594,11 @@ public class Application extends JApplet {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblItemList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblItemListMouseReleased(evt);
             }
         });
         jScrollPane2.setViewportView(tblItemList);
@@ -408,9 +631,25 @@ public class Application extends JApplet {
             }
         });
 
-        txtItemSearchLabel.setText("Search...");
+        txtItemSearch.setText("Search...");
+        txtItemSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtItemSearchFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtItemSearchFocusLost(evt);
+            }
+        });
 
         lblItemSearchLabel.setText("Search:");
+
+        btnDeleteItem.setText("Delete Item");
+        btnDeleteItem.setEnabled(false);
+        btnDeleteItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteItemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout frmItemLayout = new javax.swing.GroupLayout(frmItem);
         frmItem.setLayout(frmItemLayout);
@@ -424,10 +663,12 @@ public class Application extends JApplet {
                         .addComponent(btnLoadItems)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAddNewItem)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeleteItem)
+                        .addGap(143, 143, 143)
                         .addComponent(lblItemSearchLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtItemSearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtItemSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         frmItemLayout.setVerticalGroup(
@@ -437,8 +678,9 @@ public class Application extends JApplet {
                 .addGroup(frmItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoadItems)
                     .addComponent(btnAddNewItem)
-                    .addComponent(txtItemSearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblItemSearchLabel))
+                    .addComponent(lblItemSearchLabel)
+                    .addComponent(txtItemSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteItem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
@@ -476,6 +718,11 @@ public class Application extends JApplet {
                 return canEdit [columnIndex];
             }
         });
+        tblOrderList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblOrderListMouseReleased(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblOrderList);
         tblOrderList.getColumnModel().getColumn(0).setResizable(false);
         tblOrderList.getColumnModel().getColumn(0).setPreferredWidth(63);
@@ -499,9 +746,9 @@ public class Application extends JApplet {
             frmOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, frmOrdersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(frmOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, frmOrdersLayout.createSequentialGroup()
+                .addGroup(frmOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                    .addGroup(frmOrdersLayout.createSequentialGroup()
                         .addComponent(btnLoadOrders)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAddNewOrder)))
@@ -525,15 +772,6 @@ public class Application extends JApplet {
 
         mnuFile.setMnemonic('f');
         mnuFile.setText("File");
-
-        itmNewCustomer.setMnemonic('u');
-        itmNewCustomer.setText("New Customer");
-        itmNewCustomer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmNewCustomerActionPerformed(evt);
-            }
-        });
-        mnuFile.add(itmNewCustomer);
 
         itmExit.setMnemonic('x');
         itmExit.setText("Exit");
@@ -568,15 +806,58 @@ public class Application extends JApplet {
         });
 
         itmDefault.setText("Default");
+        itmDefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmDefaultActionPerformed(evt);
+            }
+        });
         mnuFont.add(itmDefault);
 
         itmSegoeUI.setText("Segoe UI");
+        itmSegoeUI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmSegoeUIActionPerformed(evt);
+            }
+        });
         mnuFont.add(itmSegoeUI);
 
         itmLucida.setText("Lucida Grande");
+        itmLucida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmLucidaActionPerformed(evt);
+            }
+        });
         mnuFont.add(itmLucida);
 
         mnuView.add(mnuFont);
+
+        mnuColor.setText("jMenu1");
+
+        itmDefaultColor.setText("jMenuItem1");
+        itmDefaultColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmDefaultColorActionPerformed(evt);
+            }
+        });
+        mnuColor.add(itmDefaultColor);
+
+        itmBlueColor.setText("jMenuItem1");
+        itmBlueColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmBlueColorActionPerformed(evt);
+            }
+        });
+        mnuColor.add(itmBlueColor);
+
+        itemOrangeColor.setText("jMenuItem1");
+        itemOrangeColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemOrangeColorActionPerformed(evt);
+            }
+        });
+        mnuColor.add(itemOrangeColor);
+
+        mnuView.add(mnuColor);
 
         mnuMainMenu.add(mnuView);
 
@@ -601,10 +882,6 @@ public class Application extends JApplet {
         clearStatusBarText();
     }//GEN-LAST:event_itmExitMouseExited
 
-    private void itmNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmNewCustomerActionPerformed
-        //
-    }//GEN-LAST:event_itmNewCustomerActionPerformed
-
     private void itmExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_itmExitActionPerformed
@@ -618,7 +895,7 @@ public class Application extends JApplet {
                     model.setRowCount(0);
 
                     setStatusBarText("Retrieving customers from database...");
-                    setProgressBarEnabled(false);
+                    setProgressBarEnabled(true);
                     Utils.log_info("Retrieving customers from database...");
                     Customer[] list = CustomerAccess.getCustomers();
                     for (Customer c : list) {
@@ -694,7 +971,7 @@ public class Application extends JApplet {
                         orders.add(o.getOrderId());
                         orders.add(String.format("%s %s", o.getCustomer().getFirstName(), o.getCustomer().getLastName()));
                         orders.add(o.getDate());
-                        orders.add(OrderLineAccess.getOrderLines(o).length);
+                        orders.add(OrderLineAccess.getOrderLineCount(o));
                         model.addRow(orders.toArray());
                     }
                     setStatusBarText("Done.");
@@ -710,33 +987,172 @@ public class Application extends JApplet {
 
     private void btnAddNewItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewItemActionPerformed
         JFrame frame = new JFrame("New Item");
-        frame.setContentPane(new ItemForm());
-        frame.setSize(frame.getContentPane().getPreferredSize());
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(this);
-        frame.setVisible(true);
+        openChildForm(frame, new ItemForm(frame));
     }//GEN-LAST:event_btnAddNewItemActionPerformed
 
     private void btnAddNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewCustomerActionPerformed
         JFrame frame = new JFrame("New Customer");
-        frame.setContentPane(new CustomerForm());
-        frame.setSize(frame.getContentPane().getPreferredSize());
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(this);
-        frame.setVisible(true);
+        openChildForm(frame, new CustomerForm(frame));
     }//GEN-LAST:event_btnAddNewCustomerActionPerformed
 
     private void btnAddNewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewOrderActionPerformed
         JFrame frame = new JFrame("New Order");
-        frame.setContentPane(new OrderForm());
-        frame.setSize(frame.getContentPane().getPreferredSize());
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(this);
-        frame.setVisible(true);
+        openChildForm(frame, new OrderForm(frame));
     }//GEN-LAST:event_btnAddNewOrderActionPerformed
+
+    private void tblCustomerListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCustomerListMouseReleased
+        if (evt.isPopupTrigger()) {
+            Point p = evt.getPoint();
+            int rowNumber = tblCustomerList.rowAtPoint(p);
+            ListSelectionModel model = tblCustomerList.getSelectionModel();
+            model.setSelectionInterval(rowNumber, rowNumber);
+        }
+
+        if (tblCustomerList.getSelectedRow() != -1) {
+            btnDeleteCustomer.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblCustomerListMouseReleased
+
+    private void itmEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEditCustomerActionPerformed
+        try {
+            int customerId = (Integer) tblCustomerList.getModel().getValueAt(tblCustomerList.getSelectedRow(), 0);
+            Customer c = CustomerAccess.findCustomer(customerId);
+            JFrame frame = new JFrame(String.format("Edit %s", c.getFullName()));
+            openChildForm(frame, new CustomerForm(frame, c));
+        } catch (SQLException ex) {
+            Utils.log_error("Could not open customer information for editing.");
+        } catch (HeadlessException ex) {
+            //
+        }
+    }//GEN-LAST:event_itmEditCustomerActionPerformed
+
+    private void itmEditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEditProductActionPerformed
+        try {
+            int itemId = (Integer) tblItemList.getModel().getValueAt(tblItemList.getSelectedRow(), 0);
+            Item i = ItemAccess.findItem(itemId);
+            JFrame frame = new JFrame(String.format("Edit %s", i.getName()));
+            openChildForm(frame, new ItemForm(frame, i));
+        } catch (SQLException ex) {
+            Utils.log_error("Could not open item information for editing.");
+        } catch (HeadlessException ex) {
+            //
+        }
+    }//GEN-LAST:event_itmEditProductActionPerformed
+
+    private void itmEditOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEditOrderActionPerformed
+        try {
+            int orderId = (Integer) tblOrderList.getModel().getValueAt(tblOrderList.getSelectedRow(), 0);
+            Order o = OrderAccess.findOrder(orderId);
+            JFrame frame = new JFrame(String.format("Edit order for %s", o.getCustomer().getFullName()));
+            openChildForm(frame, new OrderForm(frame, o));
+        } catch (SQLException ex) {
+            Utils.log_error("Could not open order information for editing.");
+        } catch (HeadlessException ex) {
+            //
+        }
+    }//GEN-LAST:event_itmEditOrderActionPerformed
+
+    private void btnDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCustomerActionPerformed
+        int row = tblCustomerList.getSelectedRow();
+        int customerId = (Integer) tblCustomerList.getModel().getValueAt(row, 0);
+        try {
+            if (JOptionPane.showConfirmDialog(rootPane, "Are you sure you want to delete the selected customer?", "Delete?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                CustomerAccess.deleteCustomer(customerId);
+            }
+        } catch (SQLException ex) {
+            Utils.log_error(ex.getMessage());
+        }
+        refreshCustomerTable();
+    }//GEN-LAST:event_btnDeleteCustomerActionPerformed
+
+    private void txtCustomerSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerSearchFocusGained
+        if ("Search...".equals(txtCustomerSearch.getText())) {
+            txtCustomerSearch.setText("");
+        }
+    }//GEN-LAST:event_txtCustomerSearchFocusGained
+
+    private void txtCustomerSearchFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerSearchFocusLost
+        if ("".equals(txtCustomerSearch.getText())) {
+            txtCustomerSearch.setText("Search...");
+        }
+    }//GEN-LAST:event_txtCustomerSearchFocusLost
+
+    private void txtItemSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemSearchFocusGained
+        if ("Search...".equals(txtItemSearch.getText())) {
+            txtItemSearch.setText("");
+        }
+    }//GEN-LAST:event_txtItemSearchFocusGained
+
+    private void txtItemSearchFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemSearchFocusLost
+        if ("".equals(txtItemSearch.getText())) {
+            txtItemSearch.setText("Search...");
+        }
+    }//GEN-LAST:event_txtItemSearchFocusLost
+
+    private void btnDeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteItemActionPerformed
+        int row = tblItemList.getSelectedRow();
+        int itemId = (Integer) tblItemList.getModel().getValueAt(row, 0);
+        try {
+            if (JOptionPane.showConfirmDialog(rootPane, "Are you sure you want to delete the selected item?", "Delete?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                ItemAccess.deleteItem(itemId);
+            }
+        } catch (SQLException ex) {
+            Utils.log_error(ex.getMessage());
+        }
+        refreshItemTable();
+    }//GEN-LAST:event_btnDeleteItemActionPerformed
+
+    private void tblItemListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemListMouseReleased
+        if (evt.isPopupTrigger()) {
+            Point p = evt.getPoint();
+            int rowNumber = tblItemList.rowAtPoint(p);
+            ListSelectionModel model = tblItemList.getSelectionModel();
+            model.setSelectionInterval(rowNumber, rowNumber);
+        }
+
+        if (tblItemList.getSelectedRow() != -1) {
+            btnDeleteItem.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblItemListMouseReleased
+
+    private void tblOrderListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderListMouseReleased
+        if (evt.isPopupTrigger()) {
+            Point p = evt.getPoint();
+            int rowNumber = tblOrderList.rowAtPoint(p);
+            ListSelectionModel model = tblCustomerList.getSelectionModel();
+            model.setSelectionInterval(rowNumber, rowNumber);
+        }
+    }//GEN-LAST:event_tblOrderListMouseReleased
+
+    private void itmDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDefaultActionPerformed
+        Font font = new Font("Tahoma", Font.PLAIN, 14);
+        setFonts(font);
+    }//GEN-LAST:event_itmDefaultActionPerformed
+
+    private void itmSegoeUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmSegoeUIActionPerformed
+        Font font = new Font("Segoe UI", Font.PLAIN, 14);
+        setFonts(font);
+    }//GEN-LAST:event_itmSegoeUIActionPerformed
+
+    private void itmLucidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmLucidaActionPerformed
+        Font font = new Font("Lucida Sans", Font.PLAIN, 14);
+        setFonts(font);
+    }//GEN-LAST:event_itmLucidaActionPerformed
+
+    private void itmDefaultColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDefaultColorActionPerformed
+        Color color = new Color(240, 240, 240);
+        jPanel1.setBackground(color);
+    }//GEN-LAST:event_itmDefaultColorActionPerformed
+
+    private void itmBlueColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmBlueColorActionPerformed
+        Color color = new Color(37, 170, 225);
+        jPanel1.setBackground(color);
+    }//GEN-LAST:event_itmBlueColorActionPerformed
+
+    private void itemOrangeColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemOrangeColorActionPerformed
+        Color color = new Color(225, 170, 37);
+        jPanel1.setBackground(color);
+    }//GEN-LAST:event_itemOrangeColorActionPerformed
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Generated Code">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -744,6 +1160,8 @@ public class Application extends JApplet {
     private javax.swing.JButton btnAddNewCustomer;
     private javax.swing.JButton btnAddNewItem;
     private javax.swing.JButton btnAddNewOrder;
+    private javax.swing.JButton btnDeleteCustomer;
+    private javax.swing.JButton btnDeleteItem;
     private javax.swing.JButton btnLoadCustomers;
     private javax.swing.JButton btnLoadItems;
     private javax.swing.JButton btnLoadOrders;
@@ -751,29 +1169,37 @@ public class Application extends JApplet {
     private javax.swing.JPanel frmItem;
     private javax.swing.JPanel frmOrders;
     private javax.swing.JPanel frmWelcome;
+    private javax.swing.JMenuItem itemOrangeColor;
+    private javax.swing.JMenuItem itmBlueColor;
     private javax.swing.JMenuItem itmDefault;
+    private javax.swing.JMenuItem itmDefaultColor;
+    private javax.swing.JMenuItem itmEditCustomer;
+    private javax.swing.JMenuItem itmEditOrder;
+    private javax.swing.JMenuItem itmEditProduct;
     private javax.swing.JMenuItem itmExit;
     private javax.swing.JMenuItem itmLucida;
-    private javax.swing.JMenuItem itmNewCustomer;
     private javax.swing.JMenuItem itmSegoeUI;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblCourseLabel;
     private javax.swing.JLabel lblCustomerSearchLabel;
     private javax.swing.JLabel lblItemSearchLabel;
+    private javax.swing.JLabel lblJasonLabel;
+    private javax.swing.JLabel lblJohnLabel;
+    private javax.swing.JLabel lblLogoLabel;
+    private javax.swing.JLabel lblPeterLabel;
+    private javax.swing.JLabel lblProfessorLabel;
     private javax.swing.JLabel lblStatusBarText;
+    private javax.swing.JMenu mnuColor;
+    private javax.swing.JPopupMenu mnuCustomerContextMenu;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuFont;
     private javax.swing.JMenuBar mnuMainMenu;
+    private javax.swing.JPopupMenu mnuOrderContextMenu;
+    private javax.swing.JPopupMenu mnuProductContextMenu;
     private javax.swing.JMenu mnuView;
     private javax.swing.JProgressBar prgProgressBar;
     private javax.swing.JTabbedPane tabTabbedPane;
@@ -781,7 +1207,7 @@ public class Application extends JApplet {
     private javax.swing.JTable tblItemList;
     private javax.swing.JTable tblOrderList;
     private javax.swing.JTextField txtCustomerSearch;
-    private javax.swing.JTextField txtItemSearchLabel;
+    private javax.swing.JTextField txtItemSearch;
     // End of variables declaration//GEN-END:variables
     //</editor-fold>
 }

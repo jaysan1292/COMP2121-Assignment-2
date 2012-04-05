@@ -125,4 +125,9 @@ public class Item {
     public boolean equals(Item otherItem) {
         return itemId == otherItem.itemId;
     }
+    
+    @Override
+    public String toString(){
+        return name;
+    }
 }

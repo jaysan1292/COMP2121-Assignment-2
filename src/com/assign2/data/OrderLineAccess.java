@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *
  * @author Jason Recillo
  */
-public class OrderLineAccess extends CommonAccess {
+public class OrderLineAccess extends AccessCommon {
     public static final String ORDER_ID = "order_id";
     public static final String ITEM_ID = "item_id";
     public static final String QUANTITY = "quantity";
@@ -151,5 +151,9 @@ public class OrderLineAccess extends CommonAccess {
 
     public static OrderLine[] getOrderLines(Order o) throws SQLException {
         return findOrderLine(ORDER_ID, String.valueOf(o.getOrderId()));
+    }
+    
+    public static int getOrderLineCount(Order o) throws SQLException{
+        return findOrderLine(ORDER_ID, String.valueOf(o.getOrderId())).length;
     }
 }

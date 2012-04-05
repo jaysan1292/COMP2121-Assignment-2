@@ -32,15 +32,12 @@ public class OrderHandler {
         try {
             OrderLine newLine = new OrderLine(order, item, qty);
             OrderLine[] customerLines = OrderLineAccess.getOrderLines(order);
-            boolean lineExists = false;
-            for (OrderLine line : customerLines) {
-                if (line.equals(newLine)) {
-                    lineExists = true;
-                }
-            }
+            boolean lineExists = orderLineExists(order, item, qty);
 
             if (lineExists) {
-                OrderLineAccess.updateOrderLine(order, item, qty);
+                OrderLineAccess.updateOrderLine(order, item, qty, OrderLineAccess.Mode.ADD);
+            } else {
+                OrderLineAccess.addNewOrderLine(order, item, qty);
             }
             // checkIfOrderLineExists(order, item, qty)
             // check database for current order and item

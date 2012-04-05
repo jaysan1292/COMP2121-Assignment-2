@@ -11,32 +11,91 @@
 package com.assign2.view;
 
 import com.assign2.Utils;
+import com.assign2.business.Customer;
 import com.assign2.business.Order;
 import com.assign2.business.OrderLine;
+import com.assign2.data.CustomerAccess;
 import com.assign2.data.OrderLineAccess;
+import java.awt.HeadlessException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Jason Recillo
  */
 public class OrderForm extends javax.swing.JPanel {
+    private Order theOrder;
+    private double orderTotal;
+    private JFrame parent;
+
     /** Creates new form OrderForm */
-    public OrderForm() {
+    public OrderForm(JFrame parent) {
         initComponents();
+        populateCustomerCombobox(false);
+        theOrder = new Order();
+        this.parent = parent;
     }
     
-    public OrderForm(Order o){
-            initComponents();
+    public OrderForm(JFrame parent, final Order o) {
+        initComponents();
+        populateCustomerCombobox(true);
+        Thread loadOrderLineThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DefaultTableModel model = (DefaultTableModel) tblOrderLines.getModel();
+                    OrderLine[] lines = OrderLineAccess.getOrderLines(o);
+                    orderTotal = 0;
+                    for (OrderLine line : lines) {
+                        //item id,item name, quantity, total
+                        ArrayList<Object> order = new ArrayList<Object>();
+                        order.add(line.getItem().getItemId());
+                        order.add(line.getItem().getName());
+                        order.add(line.getQuantity());
+                        order.add(line.getTotal());
+                        model.addRow(order.toArray());
+                        orderTotal += line.getTotal();
+                        lblOrderTotal.setText(String.format("$%.2f", orderTotal));
+                    }
+                } catch (SQLException ex) {
+                    Utils.log_error(ex.getMessage());
+                }
+            }
+        });
+        loadOrderLineThread.start();
+        lblOrderId.setText(String.valueOf(o.getOrderId()));
+        theOrder = o;
+        this.parent = parent;
+    }
+    
+    private void populateCustomerCombobox(boolean hasCustomer) {
         try {
-            OrderLine[] lines = OrderLineAccess.getOrderLines(o);
-            
-            for (OrderLine line:lines){
-                
+            Customer[] customerList = CustomerAccess.getCustomers();
+            for (Customer c : customerList) {
+                cboCustomerList.addItem(c);
+            }
+            if (hasCustomer) {
+                for (Customer c : customerList) {
+                    
+                }
             }
         } catch (SQLException ex) {
             Utils.log_error(ex.getMessage());
         }
+    }
+    
+    private void openChildForm(JFrame frame, JPanel form) throws HeadlessException {
+        frame.setContentPane(form);
+        frame.setSize(frame.getContentPane().getPreferredSize());
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(this);
+        frame.setAlwaysOnTop(true);
+        frame.setVisible(true);
     }
 
     /** This method is called from within the constructor to
@@ -57,22 +116,20 @@ public class OrderForm extends javax.swing.JPanel {
         lblOrderTotal = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
+        btnAddItem = new javax.swing.JButton();
+        btnRemoveItem = new javax.swing.JButton();
+        cboCustomerList = new javax.swing.JComboBox();
+        btnShowReceipt = new javax.swing.JButton();
 
         lblOrderIdLabel.setText("Order ID:");
 
         lblCustomerLabel.setText("Customer:");
 
-        lblOrderId.setText("OrderID");
+        lblOrderId.setText("Order not saved");
 
         tblOrderLines.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Item ID", "Item Name", "Quantity", "Total"
@@ -101,12 +158,39 @@ public class OrderForm extends javax.swing.JPanel {
         lblOrderTotal.setText("Total");
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Add Item");
+        btnAddItem.setText("Add Item");
+        btnAddItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddItemActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Remove Item");
+        btnRemoveItem.setText("Remove Item");
+        btnRemoveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveItemActionPerformed(evt);
+            }
+        });
+
+        btnShowReceipt.setText("Show Receipt");
+        btnShowReceipt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowReceiptActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,7 +204,9 @@ public class OrderForm extends javax.swing.JPanel {
                         .addComponent(btnSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnShowReceipt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
                         .addComponent(lblOrderTotalLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblOrderTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -131,11 +217,11 @@ public class OrderForm extends javax.swing.JPanel {
                         .addGap(31, 31, 31)
                         .addComponent(lblCustomerLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addComponent(cboCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                        .addComponent(btnAddItem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(btnRemoveItem)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -146,9 +232,9 @@ public class OrderForm extends javax.swing.JPanel {
                     .addComponent(lblOrderIdLabel)
                     .addComponent(lblCustomerLabel)
                     .addComponent(lblOrderId)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRemoveItem)
+                    .addComponent(btnAddItem)
+                    .addComponent(cboCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -156,16 +242,42 @@ public class OrderForm extends javax.swing.JPanel {
                     .addComponent(btnSave)
                     .addComponent(btnCancel)
                     .addComponent(lblOrderTotalLabel)
-                    .addComponent(lblOrderTotal))
+                    .addComponent(lblOrderTotal)
+                    .addComponent(btnShowReceipt))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        parent.setVisible(false);
+        parent.dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
+    
+    private void btnShowReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowReceiptActionPerformed
+        JFrame frame = new JFrame("Receipt");
+        openChildForm(frame, new ReceiptForm(parent, theOrder));
+    }//GEN-LAST:event_btnShowReceiptActionPerformed
+
+    private void btnRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRemoveItemActionPerformed
+
+    private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
+        OrderAddItemForm dialog = new OrderAddItemForm(parent, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnAddItemActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddItem;
     private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnRemoveItem;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btnShowReceipt;
+    private javax.swing.JComboBox cboCustomerList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCustomerLabel;
     private javax.swing.JLabel lblOrderId;

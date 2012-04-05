@@ -51,5 +51,13 @@ public class Category {
         this.parentCategory = parentCategory;
         return this;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.categoryName;
+    }
+
+    public boolean equals(Category otherCategory) {
+        return categoryId == otherCategory.categoryId;
+    }
 }

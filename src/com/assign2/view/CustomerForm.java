@@ -12,26 +12,101 @@ package com.assign2.view;
 
 import com.assign2.Utils;
 import com.assign2.business.Customer;
-import java.awt.Font;
+import com.assign2.data.CustomerAccess;
+import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 /**
  *
  * @author Jason Recillo
  */
 public class CustomerForm extends javax.swing.JPanel {
-    /** Creates new form CustomerForm */
-    public CustomerForm() {
-        initComponents();
-        lblCustomerId.setText("Customer not saved");
+    private Customer customer;
+    private JFrame parent;
+    private boolean firstNameChanged, lastNameChanged, addressChanged, phoneNumberChanged;
+    private String originalFirstName, originalLastName, originalAddress, originalPhoneNumber;
+
+    private enum FormValue {
+        FirstName, LastName, Address, PhoneNumber
     }
 
-    public CustomerForm(Customer c) {
+    /** Creates new form CustomerForm */
+    public CustomerForm(JFrame parent) {
+        initComponents();
+        lblCustomerId.setText("Customer not saved");
+        this.parent = parent;
+        customer = new Customer();
+        firstNameChanged = false;
+        lastNameChanged = false;
+        addressChanged = false;
+        phoneNumberChanged = false;
+    }
+
+    public CustomerForm(JFrame parent, Customer c) {
         initComponents();
         lblCustomerId.setText(String.valueOf(c.getCustomerId()));
         txtFirstName.setText(c.getFirstName());
         txtLastName.setText(c.getLastName());
         txtAddress.setText(c.getAddress());
         txtPhoneNumber.setText(Utils.formatPhoneNumber(c));
+        originalFirstName = c.getFirstName();
+        originalLastName = c.getLastName();
+        originalAddress = c.getAddress();
+        originalPhoneNumber = c.getPhoneNumber();
+        firstNameChanged = false;
+        lastNameChanged = false;
+        addressChanged = false;
+        phoneNumberChanged = false;
+        this.parent = parent;
+        this.customer = c;
+    }
+
+    private boolean textBoxFocusChanged(JTextField textField, String placeholderText, FormValue form) {
+        if (placeholderText.equals(textField.getText())) {
+            textField.setText("");
+            Utils.log_debug("%s changed.", form);
+            return true;
+        } else if ("".equals(textField.getText())) {
+            textField.setText(placeholderText);
+            Utils.log_debug("%s not changed.", form);
+            return false;
+        }
+        switch (form) {
+            case FirstName:
+                if (textField.getText().equals(originalFirstName)) {
+                    Utils.log_debug("%s not changed", form);
+                    return false;
+                } else {
+                    Utils.log_debug("%s changed.", form);
+                    return true;
+                }
+            case LastName:
+                if (textField.getText().equals(originalLastName)) {
+                    Utils.log_debug("%s not changed", form);
+                    return false;
+                } else {
+                    Utils.log_debug("%s changed.", form);
+                    return true;
+                }
+            case Address:
+                if (textField.getText().equals(originalAddress)) {
+                    Utils.log_debug("%s not changed", form);
+                    return false;
+                } else {
+                    Utils.log_debug("%s changed.", form);
+                    return true;
+                }
+            case PhoneNumber:
+                if (textField.getText().equals(originalPhoneNumber)) {
+                    Utils.log_debug("%s not changed", form);
+                    return false;
+                } else {
+                    Utils.log_debug("%s changed.", form);
+                    return true;
+                }
+        }
+        return false;
     }
 
     /** This method is called from within the constructor to
@@ -50,21 +125,53 @@ public class CustomerForm extends javax.swing.JPanel {
         lblFullNameLabel = new javax.swing.JLabel();
         lblAddressLabel = new javax.swing.JLabel();
         lblPhoneNumberLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        btnSave = new javax.swing.JButton();
         lblCustomerIdLabel = new javax.swing.JLabel();
         lblCustomerId = new javax.swing.JLabel();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(343, 133));
         setMinimumSize(new java.awt.Dimension(343, 133));
 
         txtFirstName.setText("First");
+        txtFirstName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtFirstNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtFirstNameFocusLost(evt);
+            }
+        });
 
         txtLastName.setText("Last");
+        txtLastName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtLastNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLastNameFocusLost(evt);
+            }
+        });
 
         txtAddress.setText("Address");
+        txtAddress.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtAddressFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAddressFocusLost(evt);
+            }
+        });
 
         txtPhoneNumber.setText("Phone Number");
+        txtPhoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPhoneNumberFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPhoneNumberFocusLost(evt);
+            }
+        });
 
         lblFullNameLabel.setText("Full Name:");
 
@@ -72,12 +179,23 @@ public class CustomerForm extends javax.swing.JPanel {
 
         lblPhoneNumberLabel.setText("Phone Number:");
 
-        btnSave.setText("Save");
-        jPanel1.add(btnSave);
-
         lblCustomerIdLabel.setText("Customer ID:");
 
-        lblCustomerId.setText("CustomerID");
+        lblCustomerId.setText("Customer not saved");
+
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -86,7 +204,6 @@ public class CustomerForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblFullNameLabel)
@@ -102,16 +219,20 @@ public class CustomerForm extends javax.swing.JPanel {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap())
+                                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancel)))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtFirstName, txtLastName});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCustomerId)
                     .addComponent(lblCustomerIdLabel))
@@ -129,13 +250,87 @@ public class CustomerForm extends javax.swing.JPanel {
                     .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPhoneNumberLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancel)
+                    .addComponent(btnSave))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        parent.setVisible(false);
+        parent.dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtFirstNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstNameFocusGained
+        firstNameChanged = textBoxFocusChanged(txtFirstName, "First", FormValue.FirstName);
+    }//GEN-LAST:event_txtFirstNameFocusGained
+
+    private void txtFirstNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstNameFocusLost
+        firstNameChanged = textBoxFocusChanged(txtFirstName, "First", FormValue.FirstName);
+    }//GEN-LAST:event_txtFirstNameFocusLost
+
+    private void txtLastNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastNameFocusGained
+        lastNameChanged = textBoxFocusChanged(txtLastName, "Last", FormValue.LastName);
+    }//GEN-LAST:event_txtLastNameFocusGained
+
+    private void txtLastNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastNameFocusLost
+        lastNameChanged = textBoxFocusChanged(txtLastName, "Last", FormValue.LastName);
+    }//GEN-LAST:event_txtLastNameFocusLost
+
+    private void txtAddressFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusGained
+        addressChanged = textBoxFocusChanged(txtAddress, "Address", FormValue.Address);
+    }//GEN-LAST:event_txtAddressFocusGained
+
+    private void txtAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusLost
+        addressChanged = textBoxFocusChanged(txtAddress, "Address", FormValue.Address);
+    }//GEN-LAST:event_txtAddressFocusLost
+
+    private void txtPhoneNumberFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusGained
+        phoneNumberChanged = textBoxFocusChanged(txtPhoneNumber, "Phone Number", FormValue.PhoneNumber);
+    }//GEN-LAST:event_txtPhoneNumberFocusGained
+
+    private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
+        phoneNumberChanged = textBoxFocusChanged(txtPhoneNumber, "Phone Number", FormValue.PhoneNumber);
+    }//GEN-LAST:event_txtPhoneNumberFocusLost
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if ("Customer not saved".equals(lblCustomerId.getText())) {
+            try {
+                Customer customer = new Customer();
+                customer.setFirstName(txtFirstName.getText());
+                customer.setLastName(txtLastName.getText());
+                customer.setAddress(txtAddress.getText());
+                customer.setPhoneNumber(txtPhoneNumber.getText());
+                CustomerAccess.addNewCustomer(customer);
+            } catch (SQLException ex) {
+                //
+            }
+        } else {
+            try {
+                // send only the changed fields to the database
+                if (firstNameChanged) {
+                    CustomerAccess.updateCustomer(Integer.valueOf(lblCustomerId.getText()), CustomerAccess.FIRST_NAME, txtFirstName.getText());
+                }
+                if (lastNameChanged) {
+                    CustomerAccess.updateCustomer(Integer.valueOf(lblCustomerId.getText()), CustomerAccess.LAST_NAME, txtLastName.getText());
+                }
+                if (addressChanged) {
+                    CustomerAccess.updateCustomer(Integer.valueOf(lblCustomerId.getText()), CustomerAccess.ADDRESS, txtAddress.getText());
+                }
+                if (phoneNumberChanged) {
+                    CustomerAccess.updateCustomer(Integer.valueOf(lblCustomerId.getText()), CustomerAccess.PHONE_NUMBER, txtPhoneNumber.getText());
+                }
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        parent.setVisible(false);
+        parent.dispose();
+    }//GEN-LAST:event_btnSaveActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAddressLabel;
     private javax.swing.JLabel lblCustomerId;
     private javax.swing.JLabel lblCustomerIdLabel;
